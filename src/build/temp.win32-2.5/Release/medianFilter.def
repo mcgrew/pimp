@@ -1,0 +1,3 @@
+LIBRARY medianFilter.pyd
+EXPORTS
+initmedianFilter
