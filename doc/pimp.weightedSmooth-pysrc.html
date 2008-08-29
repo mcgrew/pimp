@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>pimp.weightedSmooth</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        Package&nbsp;pimp ::
+        Module&nbsp;weightedSmooth
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="pimp.weightedSmooth-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="pimp.weightedSmooth-module.html">Module pimp.weightedSmooth</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno"> 1</tt>  <tt class="py-line"><tt class="py-docstring">"""</tt> </tt>
+<a name="L2"></a><tt class="py-lineno"> 2</tt>  <tt class="py-line"><tt class="py-docstring">weightedSmooth.py</tt> </tt>
+<a name="L3"></a><tt class="py-lineno"> 3</tt>  <tt class="py-line"><tt class="py-docstring">Copyright 2007 Thomas McGrew</tt> </tt>
+<a name="L4"></a><tt class="py-lineno"> 4</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L5"></a><tt class="py-lineno"> 5</tt>  <tt class="py-line"><tt class="py-docstring">This file is part of The Python Image Manipulation Project.</tt> </tt>
+<a name="L6"></a><tt class="py-lineno"> 6</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L7"></a><tt class="py-lineno"> 7</tt>  <tt class="py-line"><tt class="py-docstring">The Python Image Manipulation Project is free software: you can</tt> </tt>
+<a name="L8"></a><tt class="py-lineno"> 8</tt>  <tt class="py-line"><tt class="py-docstring">redistribute it and/or modify it under the terms of the GNU General</tt> </tt>
+<a name="L9"></a><tt class="py-lineno"> 9</tt>  <tt class="py-line"><tt class="py-docstring">Public License as published by the Free Software Foundation, either</tt> </tt>
+<a name="L10"></a><tt class="py-lineno">10</tt>  <tt class="py-line"><tt class="py-docstring">version 2 of the License, or (at your option) any later version.</tt> </tt>
+<a name="L11"></a><tt class="py-lineno">11</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L12"></a><tt class="py-lineno">12</tt>  <tt class="py-line"><tt class="py-docstring">The Python Image Manipulation Project is distributed in the hope</tt> </tt>
+<a name="L13"></a><tt class="py-lineno">13</tt>  <tt class="py-line"><tt class="py-docstring">that it will be useful, but WITHOUT ANY WARRANTY; without even the</tt> </tt>
+<a name="L14"></a><tt class="py-lineno">14</tt>  <tt class="py-line"><tt class="py-docstring">implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR</tt> </tt>
+<a name="L15"></a><tt class="py-lineno">15</tt>  <tt class="py-line"><tt class="py-docstring">PURPOSE. See the GNU General Public License for more details.</tt> </tt>
+<a name="L16"></a><tt class="py-lineno">16</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L17"></a><tt class="py-lineno">17</tt>  <tt class="py-line"><tt class="py-docstring">You should have received a copy of the GNU General Public License</tt> </tt>
+<a name="L18"></a><tt class="py-lineno">18</tt>  <tt class="py-line"><tt class="py-docstring">along with The Python Image Manipulation Project.  If not, see</tt> </tt>
+<a name="L19"></a><tt class="py-lineno">19</tt>  <tt class="py-line"><tt class="py-docstring">&lt;http://www.gnu.org/licenses/&gt;.</tt> </tt>
+<a name="L20"></a><tt class="py-lineno">20</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L21"></a><tt class="py-lineno">21</tt>  <tt class="py-line"><tt class="py-docstring">"""</tt> </tt>
+<a name="L22"></a><tt class="py-lineno">22</tt>  <tt class="py-line"> </tt>
+<a name="L23"></a><tt class="py-lineno">23</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-0" class="py-name" targets="Module pimp.core=pimp.core-module.html"><a title="pimp.core" class="py-name" href="#" onclick="return doclink('link-0', 'core', 'link-0');">core</a></tt> <tt class="py-keyword">import</tt> <tt id="link-1" class="py-name" targets="Function pimp.cCore.spatial()=pimp.cCore-module.html#spatial"><a title="pimp.cCore.spatial" class="py-name" href="#" onclick="return doclink('link-1', 'spatial', 'link-1');">spatial</a></tt> </tt>
+<a name="L24"></a><tt class="py-lineno">24</tt>  <tt class="py-line"> </tt>
+<a name="L25"></a><tt class="py-lineno">25</tt>  <tt class="py-line"><tt id="link-2" class="py-name" targets="Variable pimp.edgeDetect.MENU=pimp.edgeDetect-module.html#MENU,Variable pimp.gamma.MENU=pimp.gamma-module.html#MENU,Variable pimp.histogramEq.MENU=pimp.histogramEq-module.html#MENU,Variable pimp.invert.MENU=pimp.invert-module.html#MENU,Variable pimp.laplacianEdge.MENU=pimp.laplacianEdge-module.html#MENU,Variable pimp.laplacianSharpen.MENU=pimp.laplacianSharpen-module.html#MENU,Variable pimp.medianFilter.MENU=pimp.medianFilter-module.html#MENU,Variable pimp.modeGrey.MENU=pimp.modeGrey-module.html#MENU,Variable pimp.modeRGB.MENU=pimp.modeRGB-module.html#MENU,Variable pimp.nintendize.MENU=pimp.nintendize-module.html#MENU,Variable pimp.normalSmooth.MENU=pimp.normalSmooth-module.html#MENU,Variable pimp.swapGreenBlue.MENU=pimp.swapGreenBlue-module.html#MENU,Variable pimp.swapRedBlue.MENU=pimp.swapRedBlue-module.html#MENU,Variable pimp.swapRedGreen.MENU=pimp.swapRedGreen-module.html#MENU,Variable pimp.weightedSmooth.MENU=pimp.weightedSmooth-module.html#MENU,Variable pimp.xRay.MENU=pimp.xRay-module.html#MENU"><a title="pimp.edgeDetect.MENU
+pimp.gamma.MENU
+pimp.histogramEq.MENU
+pimp.invert.MENU
+pimp.laplacianEdge.MENU
+pimp.laplacianSharpen.MENU
+pimp.medianFilter.MENU
+pimp.modeGrey.MENU
+pimp.modeRGB.MENU
+pimp.nintendize.MENU
+pimp.normalSmooth.MENU
+pimp.swapGreenBlue.MENU
+pimp.swapRedBlue.MENU
+pimp.swapRedGreen.MENU
+pimp.weightedSmooth.MENU
+pimp.xRay.MENU" class="py-name" href="#" onclick="return doclink('link-2', 'MENU', 'link-2');">MENU</a></tt> <tt class="py-op">=</tt> <tt class="py-string">"&amp;Image.&amp;Spatial.&amp;Smooth"</tt> </tt>
+<a name="L26"></a><tt class="py-lineno">26</tt>  <tt class="py-line"><tt id="link-3" class="py-name" targets="Variable pimp.edgeDetect.LABEL=pimp.edgeDetect-module.html#LABEL,Variable pimp.gamma.LABEL=pimp.gamma-module.html#LABEL,Variable pimp.histogramEq.LABEL=pimp.histogramEq-module.html#LABEL,Variable pimp.invert.LABEL=pimp.invert-module.html#LABEL,Variable pimp.laplacianEdge.LABEL=pimp.laplacianEdge-module.html#LABEL,Variable pimp.laplacianSharpen.LABEL=pimp.laplacianSharpen-module.html#LABEL,Variable pimp.medianFilter.LABEL=pimp.medianFilter-module.html#LABEL,Variable pimp.modeGrey.LABEL=pimp.modeGrey-module.html#LABEL,Variable pimp.modeRGB.LABEL=pimp.modeRGB-module.html#LABEL,Variable pimp.nintendize.LABEL=pimp.nintendize-module.html#LABEL,Variable pimp.normalSmooth.LABEL=pimp.normalSmooth-module.html#LABEL,Variable pimp.swapGreenBlue.LABEL=pimp.swapGreenBlue-module.html#LABEL,Variable pimp.swapRedBlue.LABEL=pimp.swapRedBlue-module.html#LABEL,Variable pimp.swapRedGreen.LABEL=pimp.swapRedGreen-module.html#LABEL,Variable pimp.weightedSmooth.LABEL=pimp.weightedSmooth-module.html#LABEL,Variable pimp.xRay.LABEL=pimp.xRay-module.html#LABEL"><a title="pimp.edgeDetect.LABEL
+pimp.gamma.LABEL
+pimp.histogramEq.LABEL
+pimp.invert.LABEL
+pimp.laplacianEdge.LABEL
+pimp.laplacianSharpen.LABEL
+pimp.medianFilter.LABEL
+pimp.modeGrey.LABEL
+pimp.modeRGB.LABEL
+pimp.nintendize.LABEL
+pimp.normalSmooth.LABEL
+pimp.swapGreenBlue.LABEL
+pimp.swapRedBlue.LABEL
+pimp.swapRedGreen.LABEL
+pimp.weightedSmooth.LABEL
+pimp.xRay.LABEL" class="py-name" href="#" onclick="return doclink('link-3', 'LABEL', 'link-3');">LABEL</a></tt> <tt class="py-op">=</tt> <tt class="py-string">"&amp;Weighted"</tt> </tt>
+<a name="L27"></a><tt class="py-lineno">27</tt>  <tt class="py-line"><tt id="link-4" class="py-name" targets="Variable pimp.bmp.DESCRIPTION=pimp.bmp-module.html#DESCRIPTION,Variable pimp.edgeDetect.DESCRIPTION=pimp.edgeDetect-module.html#DESCRIPTION,Variable pimp.gamma.DESCRIPTION=pimp.gamma-module.html#DESCRIPTION,Variable pimp.histogramEq.DESCRIPTION=pimp.histogramEq-module.html#DESCRIPTION,Variable pimp.invert.DESCRIPTION=pimp.invert-module.html#DESCRIPTION,Variable pimp.jpg.DESCRIPTION=pimp.jpg-module.html#DESCRIPTION,Variable pimp.laplacianEdge.DESCRIPTION=pimp.laplacianEdge-module.html#DESCRIPTION,Variable pimp.laplacianSharpen.DESCRIPTION=pimp.laplacianSharpen-module.html#DESCRIPTION,Variable pimp.medianFilter.DESCRIPTION=pimp.medianFilter-module.html#DESCRIPTION,Variable pimp.modeGrey.DESCRIPTION=pimp.modeGrey-module.html#DESCRIPTION,Variable pimp.modeRGB.DESCRIPTION=pimp.modeRGB-module.html#DESCRIPTION,Variable pimp.nintendize.DESCRIPTION=pimp.nintendize-module.html#DESCRIPTION,Variable pimp.normalSmooth.DESCRIPTION=pimp.normalSmooth-module.html#DESCRIPTION,Variable pimp.swapGreenBlue.DESCRIPTION=pimp.swapGreenBlue-module.html#DESCRIPTION,Variable pimp.swapRedBlue.DESCRIPTION=pimp.swapRedBlue-module.html#DESCRIPTION,Variable pimp.swapRedGreen.DESCRIPTION=pimp.swapRedGreen-module.html#DESCRIPTION,Variable pimp.weightedSmooth.DESCRIPTION=pimp.weightedSmooth-module.html#DESCRIPTION,Variable pimp.xRay.DESCRIPTION=pimp.xRay-module.html#DESCRIPTION"><a title="pimp.bmp.DESCRIPTION
+pimp.edgeDetect.DESCRIPTION
+pimp.gamma.DESCRIPTION
+pimp.histogramEq.DESCRIPTION
+pimp.invert.DESCRIPTION
+pimp.jpg.DESCRIPTION
+pimp.laplacianEdge.DESCRIPTION
+pimp.laplacianSharpen.DESCRIPTION
+pimp.medianFilter.DESCRIPTION
+pimp.modeGrey.DESCRIPTION
+pimp.modeRGB.DESCRIPTION
+pimp.nintendize.DESCRIPTION
+pimp.normalSmooth.DESCRIPTION
+pimp.swapGreenBlue.DESCRIPTION
+pimp.swapRedBlue.DESCRIPTION
+pimp.swapRedGreen.DESCRIPTION
+pimp.weightedSmooth.DESCRIPTION
+pimp.xRay.DESCRIPTION" class="py-name" href="#" onclick="return doclink('link-4', 'DESCRIPTION', 'link-4');">DESCRIPTION</a></tt> <tt class="py-op">=</tt> <tt class="py-string">"Smooth Image"</tt> </tt>
+<a name="L28"></a><tt class="py-lineno">28</tt>  <tt class="py-line"> </tt>
+<a name="L29"></a><tt class="py-lineno">29</tt>  <tt class="py-line"><tt id="link-5" class="py-name" targets="Variable pimp.edgeDetect.FILTER=pimp.edgeDetect-module.html#FILTER,Variable pimp.laplacianEdge.FILTER=pimp.laplacianEdge-module.html#FILTER,Variable pimp.laplacianSharpen.FILTER=pimp.laplacianSharpen-module.html#FILTER,Variable pimp.normalSmooth.FILTER=pimp.normalSmooth-module.html#FILTER,Variable pimp.weightedSmooth.FILTER=pimp.weightedSmooth-module.html#FILTER"><a title="pimp.edgeDetect.FILTER
+pimp.laplacianEdge.FILTER
+pimp.laplacianSharpen.FILTER
+pimp.normalSmooth.FILTER
+pimp.weightedSmooth.FILTER" class="py-name" href="#" onclick="return doclink('link-5', 'FILTER', 'link-5');">FILTER</a></tt> <tt class="py-op">=</tt> <tt class="py-op">(</tt> <tt class="py-number">1</tt><tt class="py-op">,</tt>  <tt class="py-number">2</tt><tt class="py-op">,</tt>  <tt class="py-number">1</tt><tt class="py-op">,</tt> </tt>
+<a name="L30"></a><tt class="py-lineno">30</tt>  <tt class="py-line">           <tt class="py-number">2</tt><tt class="py-op">,</tt>  <tt class="py-number">4</tt><tt class="py-op">,</tt>  <tt class="py-number">2</tt><tt class="py-op">,</tt> </tt>
+<a name="L31"></a><tt class="py-lineno">31</tt>  <tt class="py-line">           <tt class="py-number">1</tt><tt class="py-op">,</tt>  <tt class="py-number">2</tt><tt class="py-op">,</tt>  <tt class="py-number">1</tt> <tt class="py-op">)</tt> </tt>
+<a name="L32"></a><tt class="py-lineno">32</tt>  <tt class="py-line">            </tt>
+<a name="L33"></a><tt class="py-lineno">33</tt>  <tt class="py-line"> </tt>
+<a name="execute"></a><div id="execute-def"><a name="L34"></a><tt class="py-lineno">34</tt> <a class="py-toggle" href="#" id="execute-toggle" onclick="return toggle('execute');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="pimp.weightedSmooth-module.html#execute">execute</a><tt class="py-op">(</tt> <tt class="py-param">width</tt><tt class="py-op">,</tt> <tt class="py-param">height</tt><tt class="py-op">,</tt> <tt class="py-param">data</tt> <tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="execute-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="execute-expanded"><a name="L35"></a><tt class="py-lineno">35</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L36"></a><tt class="py-lineno">36</tt>  <tt class="py-line"><tt class="py-docstring">    Smooths an image, placing more emphasis on the center of a 3x3 area and less</tt> </tt>
+<a name="L37"></a><tt class="py-lineno">37</tt>  <tt class="py-line"><tt class="py-docstring">    on the surrounding pixels.</tt> </tt>
+<a name="L38"></a><tt class="py-lineno">38</tt>  <tt class="py-line"><tt class="py-docstring">        </tt> </tt>
+<a name="L39"></a><tt class="py-lineno">39</tt>  <tt class="py-line"><tt class="py-docstring">    :Parameters:</tt> </tt>
+<a name="L40"></a><tt class="py-lineno">40</tt>  <tt class="py-line"><tt class="py-docstring">        width : int</tt> </tt>
+<a name="L41"></a><tt class="py-lineno">41</tt>  <tt class="py-line"><tt class="py-docstring">            The width of the image being converted</tt> </tt>
+<a name="L42"></a><tt class="py-lineno">42</tt>  <tt class="py-line"><tt class="py-docstring">        height : int</tt> </tt>
+<a name="L43"></a><tt class="py-lineno">43</tt>  <tt class="py-line"><tt class="py-docstring">            The height of the image being converted</tt> </tt>
+<a name="L44"></a><tt class="py-lineno">44</tt>  <tt class="py-line"><tt class="py-docstring">        data : string</tt> </tt>
+<a name="L45"></a><tt class="py-lineno">45</tt>  <tt class="py-line"><tt class="py-docstring">            A string containing the data for the image</tt> </tt>
+<a name="L46"></a><tt class="py-lineno">46</tt>  <tt class="py-line"><tt class="py-docstring">    </tt> </tt>
+<a name="L47"></a><tt class="py-lineno">47</tt>  <tt class="py-line"><tt class="py-docstring">    :rtype: tuple</tt> </tt>
+<a name="L48"></a><tt class="py-lineno">48</tt>  <tt class="py-line"><tt class="py-docstring">    :returns: a tuple containing a width, height, and data as a binary string.</tt> </tt>
+<a name="L49"></a><tt class="py-lineno">49</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L50"></a><tt class="py-lineno">50</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt id="link-6" class="py-name"><a title="pimp.cCore.spatial" class="py-name" href="#" onclick="return doclink('link-6', 'spatial', 'link-1');">spatial</a></tt><tt class="py-op">(</tt> <tt class="py-name">width</tt><tt class="py-op">,</tt> <tt class="py-name">height</tt><tt class="py-op">,</tt> <tt class="py-name">data</tt><tt class="py-op">,</tt> <tt id="link-7" class="py-name"><a title="pimp.edgeDetect.FILTER
+pimp.laplacianEdge.FILTER
+pimp.laplacianSharpen.FILTER
+pimp.normalSmooth.FILTER
+pimp.weightedSmooth.FILTER" class="py-name" href="#" onclick="return doclink('link-7', 'FILTER', 'link-5');">FILTER</a></tt> <tt class="py-op">)</tt> </tt>
+</div><a name="L51"></a><tt class="py-lineno">51</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0beta1 on Mon Nov 05 13:21:05 2007
+    </td>
+    <td align="right" class="footer">
+      <a href="http://epydoc.sourceforge.net">http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie()
+  // -->
+</script>
+  
+</body>
+</html>

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>pimp.pimp</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        Package&nbsp;pimp ::
+        Module&nbsp;pimp
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="pimp.pimp-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="pimp.pimp-module.html">Module pimp.pimp</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno"> 1</tt>  <tt class="py-line"><tt class="py-comment">#!/usr/bin/python</tt> </tt>
+<a name="L2"></a><tt class="py-lineno"> 2</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-docstring">"""</tt> </tt>
+<a name="L3"></a><tt class="py-lineno"> 3</tt>  <tt class="py-line"><tt class="py-docstring">pimp.py</tt> </tt>
+<a name="L4"></a><tt class="py-lineno"> 4</tt>  <tt class="py-line"><tt class="py-docstring">Copyright 2007 Thomas McGrew</tt> </tt>
+<a name="L5"></a><tt class="py-lineno"> 5</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L6"></a><tt class="py-lineno"> 6</tt>  <tt class="py-line"><tt class="py-docstring">This file is part of The Python Image Manipulation Project.</tt> </tt>
+<a name="L7"></a><tt class="py-lineno"> 7</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L8"></a><tt class="py-lineno"> 8</tt>  <tt class="py-line"><tt class="py-docstring">The Python Image Manipulation Project is free software: you can</tt> </tt>
+<a name="L9"></a><tt class="py-lineno"> 9</tt>  <tt class="py-line"><tt class="py-docstring">redistribute it and/or modify it under the terms of the GNU General</tt> </tt>
+<a name="L10"></a><tt class="py-lineno">10</tt>  <tt class="py-line"><tt class="py-docstring">Public License as published by the Free Software Foundation, either</tt> </tt>
+<a name="L11"></a><tt class="py-lineno">11</tt>  <tt class="py-line"><tt class="py-docstring">version 2 of the License, or (at your option) any later version.</tt> </tt>
+<a name="L12"></a><tt class="py-lineno">12</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L13"></a><tt class="py-lineno">13</tt>  <tt class="py-line"><tt class="py-docstring">The Python Image Manipulation Project is distributed in the hope</tt> </tt>
+<a name="L14"></a><tt class="py-lineno">14</tt>  <tt class="py-line"><tt class="py-docstring">that it will be useful, but WITHOUT ANY WARRANTY; without even the</tt> </tt>
+<a name="L15"></a><tt class="py-lineno">15</tt>  <tt class="py-line"><tt class="py-docstring">implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR</tt> </tt>
+<a name="L16"></a><tt class="py-lineno">16</tt>  <tt class="py-line"><tt class="py-docstring">PURPOSE. See the GNU General Public License for more details.</tt> </tt>
+<a name="L17"></a><tt class="py-lineno">17</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L18"></a><tt class="py-lineno">18</tt>  <tt class="py-line"><tt class="py-docstring">You should have received a copy of the GNU General Public License</tt> </tt>
+<a name="L19"></a><tt class="py-lineno">19</tt>  <tt class="py-line"><tt class="py-docstring">along with The Python Image Manipulation Project.  If not, see</tt> </tt>
+<a name="L20"></a><tt class="py-lineno">20</tt>  <tt class="py-line"><tt class="py-docstring">&lt;http://www.gnu.org/licenses/&gt;.</tt> </tt>
+<a name="L21"></a><tt class="py-lineno">21</tt>  <tt class="py-line"><tt class="py-docstring">"""</tt> </tt>
+<a name="L22"></a><tt class="py-lineno">22</tt>  <tt class="py-line"> </tt>
+<a name="L23"></a><tt class="py-lineno">23</tt>  <tt class="py-line"><tt class="py-comment">#library imports</tt> </tt>
+<a name="L24"></a><tt class="py-lineno">24</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-keyword">import</tt> <tt class="py-name">wx</tt> </tt>
+<a name="L25"></a><tt class="py-lineno">25</tt>  <tt class="py-line"> </tt>
+<a name="L26"></a><tt class="py-lineno">26</tt>  <tt class="py-line"><tt class="py-comment"># local imports</tt> </tt>
+<a name="L27"></a><tt class="py-lineno">27</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-keyword">import</tt> <tt id="link-0" class="py-name" targets="Module pimp.editor=pimp.editor-module.html"><a title="pimp.editor" class="py-name" href="#" onclick="return doclink('link-0', 'editor', 'link-0');">editor</a></tt> </tt>
+<a name="L28"></a><tt class="py-lineno">28</tt>  <tt class="py-line"> </tt>
+<a name="L29"></a><tt class="py-lineno">29</tt>  <tt class="py-line"><tt class="py-comment"># ========================================================= SPLASH SCREEN ====================================================================</tt> </tt>
+<a name="Splash"></a><div id="Splash-def"><a name="L30"></a><tt class="py-lineno">30</tt> <a class="py-toggle" href="#" id="Splash-toggle" onclick="return toggle('Splash');">-</a><tt class="py-line"><tt class="py-comment"></tt><tt class="py-keyword">class</tt> <a class="py-def-name" href="pimp.pimp.Splash-class.html">Splash</a><tt class="py-op">(</tt><tt class="py-base-class">wx</tt><tt class="py-op">.</tt><tt class="py-base-class">SplashScreen</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Splash-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="Splash-expanded"><a name="L31"></a><tt class="py-lineno">31</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L32"></a><tt class="py-lineno">32</tt>  <tt class="py-line"><tt class="py-docstring">    Create a splash screen widget.</tt> </tt>
+<a name="L33"></a><tt class="py-lineno">33</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="Splash.__init__"></a><div id="Splash.__init__-def"><a name="L34"></a><tt class="py-lineno">34</tt> <a class="py-toggle" href="#" id="Splash.__init__-toggle" onclick="return toggle('Splash.__init__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pimp.pimp.Splash-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">app</tt><tt class="py-op">,</tt> <tt class="py-param">image</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Splash.__init__-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="Splash.__init__-expanded"><a name="L35"></a><tt class="py-lineno">35</tt>  <tt class="py-line">        <tt class="py-name">aBitmap</tt> <tt class="py-op">=</tt> <tt class="py-name">wx</tt><tt class="py-op">.</tt><tt id="link-1" class="py-name" targets="Class pimp.image.Image=pimp.image.Image-class.html"><a title="pimp.image.Image" class="py-name" href="#" onclick="return doclink('link-1', 'Image', 'link-1');">Image</a></tt><tt class="py-op">(</tt><tt class="py-name">name</tt> <tt class="py-op">=</tt> <tt id="link-2" class="py-name" targets="Module pimp.image=pimp.image-module.html"><a title="pimp.image" class="py-name" href="#" onclick="return doclink('link-2', 'image', 'link-2');">image</a></tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt class="py-name">ConvertToBitmap</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L36"></a><tt class="py-lineno">36</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">app</tt> <tt class="py-op">=</tt> <tt class="py-name">app</tt> </tt>
+<a name="L37"></a><tt class="py-lineno">37</tt>  <tt class="py-line">        <tt class="py-name">splashStyle</tt> <tt class="py-op">=</tt> <tt class="py-name">wx</tt><tt class="py-op">.</tt><tt class="py-name">SPLASH_CENTRE_ON_SCREEN</tt> <tt class="py-op">|</tt> <tt class="py-name">wx</tt><tt class="py-op">.</tt><tt class="py-name">SPLASH_TIMEOUT</tt> </tt>
+<a name="L38"></a><tt class="py-lineno">38</tt>  <tt class="py-line">        <tt class="py-name">splashDuration</tt> <tt class="py-op">=</tt> <tt class="py-number">3000</tt> <tt class="py-comment"># milliseconds</tt> </tt>
+<a name="L39"></a><tt class="py-lineno">39</tt>  <tt class="py-line">        <tt class="py-name">wx</tt><tt class="py-op">.</tt><tt class="py-name">SplashScreen</tt><tt class="py-op">.</tt><tt id="link-3" class="py-name" targets="Method pimp.editor.Frame.__init__()=pimp.editor.Frame-class.html#__init__,Method pimp.error.ExtensionError.__init__()=pimp.error.ExtensionError-class.html#__init__,Method pimp.error.ImageFormatError.__init__()=pimp.error.ImageFormatError-class.html#__init__,Method pimp.error.ImageReadError.__init__()=pimp.error.ImageReadError-class.html#__init__,Method pimp.error.UnsupportedImageTypeError.__init__()=pimp.error.UnsupportedImageTypeError-class.html#__init__,Method pimp.image.Image.__init__()=pimp.image.Image-class.html#__init__,Method pimp.pimp.Splash.__init__()=pimp.pimp.Splash-class.html#__init__"><a title="pimp.editor.Frame.__init__
+pimp.error.ExtensionError.__init__
+pimp.error.ImageFormatError.__init__
+pimp.error.ImageReadError.__init__
+pimp.error.UnsupportedImageTypeError.__init__
+pimp.image.Image.__init__
+pimp.pimp.Splash.__init__" class="py-name" href="#" onclick="return doclink('link-3', '__init__', 'link-3');">__init__</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">,</tt> <tt class="py-name">aBitmap</tt><tt class="py-op">,</tt> <tt class="py-name">splashStyle</tt><tt class="py-op">,</tt> <tt class="py-name">splashDuration</tt><tt class="py-op">,</tt> <tt class="py-name">parent</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">)</tt> </tt>
+<a name="L40"></a><tt class="py-lineno">40</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">Bind</tt><tt class="py-op">(</tt><tt class="py-name">wx</tt><tt class="py-op">.</tt><tt class="py-name">EVT_CLOSE</tt><tt class="py-op">,</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-4" class="py-name" targets="Method pimp.editor.Frame.onExit()=pimp.editor.Frame-class.html#onExit,Method pimp.pimp.Splash.onExit()=pimp.pimp.Splash-class.html#onExit"><a title="pimp.editor.Frame.onExit
+pimp.pimp.Splash.onExit" class="py-name" href="#" onclick="return doclink('link-4', 'onExit', 'link-4');">onExit</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L41"></a><tt class="py-lineno">41</tt>  <tt class="py-line">        <tt class="py-name">wx</tt><tt class="py-op">.</tt><tt class="py-name">Yield</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L42"></a><tt class="py-lineno">42</tt>  <tt class="py-line"> </tt>
+<a name="Splash.onExit"></a><div id="Splash.onExit-def"><a name="L43"></a><tt class="py-lineno">43</tt> <a class="py-toggle" href="#" id="Splash.onExit-toggle" onclick="return toggle('Splash.onExit');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pimp.pimp.Splash-class.html#onExit">onExit</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">evt</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Splash.onExit-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="Splash.onExit-expanded"><a name="L44"></a><tt class="py-lineno">44</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">Hide</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L45"></a><tt class="py-lineno">45</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">app</tt><tt class="py-op">.</tt><tt class="py-name">SetTopWindow</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">app</tt><tt class="py-op">.</tt><tt class="py-name">frame</tt><tt class="py-op">)</tt> </tt>
+<a name="L46"></a><tt class="py-lineno">46</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">app</tt><tt class="py-op">.</tt><tt class="py-name">frame</tt><tt class="py-op">.</tt><tt class="py-name">Show</tt><tt class="py-op">(</tt><tt class="py-name">True</tt><tt class="py-op">)</tt> </tt>
+<a name="L47"></a><tt class="py-lineno">47</tt>  <tt class="py-line">        <tt class="py-comment"># The program will freeze without this line.</tt> </tt>
+<a name="L48"></a><tt class="py-lineno">48</tt>  <tt class="py-line"><tt class="py-comment"></tt>        <tt class="py-name">evt</tt><tt class="py-op">.</tt><tt class="py-name">Skip</tt><tt class="py-op">(</tt><tt class="py-op">)</tt>  <tt class="py-comment"># Make sure the default handler runs too...</tt> </tt>
+</div></div><a name="L49"></a><tt class="py-lineno">49</tt>  <tt class="py-line"><tt class="py-comment"># ======================================================= END SPLASH SCREEN ================================================================</tt> </tt>
+<a name="L50"></a><tt class="py-lineno">50</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="App"></a><div id="App-def"><a name="L51"></a><tt class="py-lineno">51</tt> <a class="py-toggle" href="#" id="App-toggle" onclick="return toggle('App');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="pimp.pimp.App-class.html">App</a><tt class="py-op">(</tt> <tt class="py-base-class">wx</tt><tt class="py-op">.</tt><tt class="py-base-class">App</tt> <tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="App-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="App-expanded"><a name="L52"></a><tt class="py-lineno">52</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L53"></a><tt class="py-lineno">53</tt>  <tt class="py-line"><tt class="py-docstring">    wx.App subclass required by wxPython.</tt> </tt>
+<a name="L54"></a><tt class="py-lineno">54</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="App.OnInit"></a><div id="App.OnInit-def"><a name="L55"></a><tt class="py-lineno">55</tt> <a class="py-toggle" href="#" id="App.OnInit-toggle" onclick="return toggle('App.OnInit');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pimp.pimp.App-class.html#OnInit">OnInit</a><tt class="py-op">(</tt> <tt class="py-param">self</tt> <tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="App.OnInit-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="App.OnInit-expanded"><a name="L56"></a><tt class="py-lineno">56</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">frame</tt> <tt class="py-op">=</tt> <tt id="link-5" class="py-name"><a title="pimp.editor" class="py-name" href="#" onclick="return doclink('link-5', 'editor', 'link-0');">editor</a></tt><tt class="py-op">.</tt><tt id="link-6" class="py-name" targets="Class pimp.editor.Frame=pimp.editor.Frame-class.html"><a title="pimp.editor.Frame" class="py-name" href="#" onclick="return doclink('link-6', 'Frame', 'link-6');">Frame</a></tt><tt class="py-op">(</tt> <tt class="py-op">)</tt> </tt>
+<a name="L57"></a><tt class="py-lineno">57</tt>  <tt class="py-line"><tt class="py-comment">#        splash = Splash( self, "splash.bmp" )</tt> </tt>
+<a name="L58"></a><tt class="py-lineno">58</tt>  <tt class="py-line"><tt class="py-comment"></tt>        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">frame</tt><tt class="py-op">.</tt><tt class="py-name">Show</tt><tt class="py-op">(</tt> <tt class="py-name">True</tt> <tt class="py-op">)</tt> </tt>
+<a name="L59"></a><tt class="py-lineno">59</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">True</tt> </tt>
+</div></div><a name="L60"></a><tt class="py-lineno">60</tt>  <tt class="py-line"> </tt>
+<a name="L61"></a><tt class="py-lineno">61</tt>  <tt class="py-line"> </tt>
+<a name="L62"></a><tt class="py-lineno">62</tt>  <tt class="py-line"><tt class="py-keyword">if</tt> <tt class="py-name">__name__</tt> <tt class="py-op">==</tt> <tt class="py-string">"__main__"</tt><tt class="py-op">:</tt> </tt>
+<a name="L63"></a><tt class="py-lineno">63</tt>  <tt class="py-line">    <tt class="py-name">g</tt> <tt class="py-op">=</tt> <tt id="link-7" class="py-name" targets="Class pimp.pimp.App=pimp.pimp.App-class.html"><a title="pimp.pimp.App" class="py-name" href="#" onclick="return doclink('link-7', 'App', 'link-7');">App</a></tt><tt class="py-op">(</tt> <tt class="py-op">)</tt> </tt>
+<a name="L64"></a><tt class="py-lineno">64</tt>  <tt class="py-line">    <tt class="py-name">g</tt><tt class="py-op">.</tt><tt class="py-name">MainLoop</tt><tt class="py-op">(</tt> <tt class="py-op">)</tt> </tt>
+<a name="L65"></a><tt class="py-lineno">65</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0beta1 on Mon Nov 05 13:21:05 2007
+    </td>
+    <td align="right" class="footer">
+      <a href="http://epydoc.sourceforge.net">http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie()
+  // -->
+</script>
+  
+</body>
+</html>
