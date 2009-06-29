@@ -1,3 +1,4 @@
+#!/usr/bin/python
 """
 Copyright 2007 Thomas McGrew
 
