@@ -1,3 +1,0 @@
-LIBRARY color.pyd
-EXPORTS
-initcolor

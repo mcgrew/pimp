@@ -1,3 +1,0 @@
-LIBRARY invert.pyd
-EXPORTS
-initinvert
