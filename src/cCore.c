@@ -354,32 +354,6 @@ PyObject *spatial( PyObject *pself, PyObject *pArgs )
                     tmp += data[ position + ( ( m / filterSize - edgeSize ) * width * channels ) + ( ( m % filterSize - edgeSize ) * channels ) ] * filter[ m ];
                 }
                 outdata[ position ] = clip( abs( tmp / filterTotal ) );
-                    // old algorithm for a 5x5 filter. left here for reference.
-//                 outdata[ position ] = clip( abs(    data[ position - 2 * width * channels - 2 * channels ] * filter[  0 ] +
-//                                                     data[ position - 2 * width * channels - 1 * channels ] * filter[  1 ] +
-//                                                     data[ position - 2 * width * channels                ] * filter[  2 ] +
-//                                                     data[ position - 2 * width * channels + 1 * channels ] * filter[  3 ] +
-//                                                     data[ position - 2 * width * channels + 2 * channels ] * filter[  4 ] +
-//                                                     data[ position -     width * channels - 2 * channels ] * filter[  5 ] +
-//                                                     data[ position -     width * channels - 1 * channels ] * filter[  6 ] +
-//                                                     data[ position -     width * channels                ] * filter[  7 ] +
-//                                                     data[ position -     width * channels + 1 * channels ] * filter[  8 ] +
-//                                                     data[ position -     width * channels + 2 * channels ] * filter[  9 ] +
-//                                                     data[ position                        - 2 * channels ] * filter[ 10 ] +
-//                                                     data[ position                        - 1 * channels ] * filter[ 11 ] +
-//                                                     data[ position                                       ] * filter[ 12 ] +
-//                                                     data[ position                        + 1 * channels ] * filter[ 13 ] +
-//                                                     data[ position                        + 2 * channels ] * filter[ 14 ] +
-//                                                     data[ position +     width * channels - 2 * channels ] * filter[ 15 ] +
-//                                                     data[ position +     width * channels - 1 * channels ] * filter[ 16 ] +
-//                                                     data[ position +     width * channels                ] * filter[ 17 ] +
-//                                                     data[ position +     width * channels + 1 * channels ] * filter[ 18 ] +
-//                                                     data[ position +     width * channels + 2 * channels ] * filter[ 19 ] +
-//                                                     data[ position + 2 * width * channels - 2 * channels ] * filter[ 20 ] +
-//                                                     data[ position + 2 * width * channels - 1 * channels ] * filter[ 21 ] +
-//                                                     data[ position + 2 * width * channels                ] * filter[ 22 ] +
-//                                                     data[ position + 2 * width * channels + 1 * channels ] * filter[ 23 ] +
-//                                                     data[ position + 2 * width * channels + 2 * channels ] * filter[ 24 ] ) / filterTotal );
             }
         }
     }

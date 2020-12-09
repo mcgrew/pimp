@@ -62,37 +62,6 @@ class App( wx.App ):
             self.frame.Show( True )
         return True
 
-
-class ObjNode( object ):
-    """
-    A generic Object node. It is designed to work similarly to a javascript object.
-    It's intended use is to create a heirarchy of objects
-    """
-    def __init__( self, value=None ):
-        object.__init__( self )
-        self.__dict__[ "value" ] = value
-
-    def __setattr__( self, attr, value ):
-        if ( attr[ 0 ] == '_' ):
-            self.__dict__[ attr ] = value
-        elif self.__dict__.has_key( attr ):
-            self.__dict__[ attr ].__dict__[ "value" ] = value
-        else:
-            self.__dict__[ attr ] = ObjNode( value )
-
-    def __getattr__( self, attr ):
-        if self.__dict__.has_key( attr ):
-            return self.__dict__[ attr ]
-        elif attr in dir( self.value ):
-            return eval( "self.value."+attr )
-        else:
-            return None
-
-    def __call__( self, *args ):
-        self.value( args )
-
-
-
 if __name__ == "__main__":
     g = App( )
     g.MainLoop( )
