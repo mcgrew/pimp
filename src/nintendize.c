@@ -19,6 +19,7 @@ along with The Python Image Manipulation Project.  If not, see\n\
 <http://www.gnu.org/licenses/>.\n\
 ";
 
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
 #include <math.h>
 #include "core.h"
@@ -43,18 +44,19 @@ looks like an image from an old video game console.\n\
 PyObject *nintendize( PyObject *pself, PyObject *pArgs )
 {
     int i, j, k, m, position, maxi, maxj; // for loop variables
-    int width, height, dataLen;
+    int width, height;
+    Py_ssize_t dataLen;
     unsigned char *data, *newData;
     int size; // the size for a median filter
     unsigned int colorlevel = 3; // the number of bits to save per color channel
     unsigned int resolution = 200; // the resolution to pixellate the image to.
     int channels; // the number of color channels in this image
-    int padding, thisPixel;
+    int thisPixel;
     int tmp_red, tmp_blue, tmp_green;
     int mask;
 
     // read in the arguments from python
-    if ( !PyArg_ParseTuple( pArgs, "iis#|ii", &width, &height, &data, &dataLen, &resolution, &colorlevel ) )
+    if ( !PyArg_ParseTuple( pArgs, "iiy#|ii", &width, &height, &data, &dataLen, &resolution, &colorlevel ) )
         return NULL;
 
     // make sure colorlevel is 8 or less (it always should be)
@@ -65,7 +67,6 @@ PyObject *nintendize( PyObject *pself, PyObject *pArgs )
     size = min( size, min( width, height ) );
     size = max( size, 1 );
 
-    padding = size / 2; // the padding ( border ) to leave around the image in the main loop
     channels = dataLen / ( width * height );
     mask = ( 0xff << ( 8 - colorlevel ) ) & 0xff; // the mask to be used in masking each color channel
     
@@ -76,7 +77,7 @@ PyObject *nintendize( PyObject *pself, PyObject *pArgs )
         return NULL;
     }
     
-    if( !( newData = ( char* )calloc( sizeof( char ), dataLen ) ) )
+    if( !( newData = ( unsigned char* )calloc( sizeof( char ), dataLen ) ) )
     {
         PyErr_SetString( PyExc_MemoryError, "Memory could not be allocated for the new image" );
         return NULL;
@@ -128,7 +129,7 @@ PyObject *nintendize( PyObject *pself, PyObject *pArgs )
     }
 
     // Build a python tuple and return it.
-    return Py_BuildValue( "(iis#)", width, height, newData, dataLen );
+    return Py_BuildValue( "(iiy#)", width, height, newData, dataLen );
 
 }
 
@@ -139,12 +140,20 @@ static PyMethodDef nintendize_methods[ ] =
     { NULL, NULL } // End of functions
 };
 
-PyMODINIT_FUNC initnintendize( void )
+static struct PyModuleDef nintendize_module = {
+    PyModuleDef_HEAD_INIT,
+    "nintendize",
+    __doc__,
+    -1,
+    nintendize_methods
+};
+
+PyMODINIT_FUNC PyInit_nintendize( void )
 {
-    PyObject *m = Py_InitModule3( "nintendize", nintendize_methods, __doc__ );
+    PyObject *m = PyModule_Create(&nintendize_module);
     PyModule_AddStringConstant( m, "MENU", "Fil&ter.&Comic" );
     PyModule_AddStringConstant( m, "LABEL", "Nindendi&ze" );
     PyModule_AddStringConstant( m, "DESCRIPTION", "Nintendize it!" );
+    return m;
 }
-
 

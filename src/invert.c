@@ -19,6 +19,7 @@ along with The Python Image Manipulation Project.  If not, see\n\
 <http://www.gnu.org/licenses/>.\n\
 ";
 
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -45,11 +46,12 @@ static char execute__doc__[ ] =
 PyObject *invert_execute( PyObject *pself, PyObject *pArgs )
 {
     unsigned char *data;
-    unsigned int width, height, dataLen, i;
+    unsigned int width, height, i;
+    Py_ssize_t dataLen;
     unsigned char channels;
 
     // convert the passed in python argument to C types.
-    if ( !PyArg_ParseTuple( pArgs, "iis#", &width, &height, &data, &dataLen ) )
+    if ( !PyArg_ParseTuple( pArgs, "iiy#", &width, &height, &data, &dataLen ) )
         return NULL;
 
     channels = dataLen / ( width * height );
@@ -69,7 +71,7 @@ PyObject *invert_execute( PyObject *pself, PyObject *pArgs )
 
 
     // Build a python tuple and return it.
-    return Py_BuildValue( "(iis#)", width, height, data, dataLen );
+    return Py_BuildValue( "(iiy#)", width, height, data, dataLen );
 
 }
 
@@ -80,10 +82,21 @@ static PyMethodDef invert_methods[ ] =
     { NULL, NULL } // End of functions
 };
 
-PyMODINIT_FUNC initinvert( void )
+static struct PyModuleDef invert_module = {
+    PyModuleDef_HEAD_INIT,
+    "ccore",
+    __doc__,
+    -1,
+    invert_methods
+};
+
+PyMODINIT_FUNC PyInit_invert( void )
 {
-    PyObject *m = Py_InitModule3( "invert", invert_methods, __doc__ );
+    PyObject *m = PyModule_Create(&invert_module);
     PyModule_AddStringConstant( m, "MENU", "Fil&ter" );
     PyModule_AddStringConstant( m, "LABEL", "In&vert" );
     PyModule_AddStringConstant( m, "DESCRIPTION", "Inverts All Colors In The Image" );
+    return m;
 }
+
+

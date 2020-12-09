@@ -19,6 +19,7 @@ along with The Python Image Manipulation Project.  If not, see\n\
 <http://www.gnu.org/licenses/>.\n\
 ";
 
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -45,7 +46,8 @@ static char execute__doc__[ ] =
 PyObject *execute( PyObject *pself, PyObject *pArgs )
 {
     unsigned char *data;
-    unsigned int width, height, dataLen;
+    unsigned int width, height;
+    Py_ssize_t dataLen;
     unsigned char channels;
 
     unsigned char *histogram_sum;
@@ -54,7 +56,7 @@ PyObject *execute( PyObject *pself, PyObject *pArgs )
     unsigned long long *histogram_table;
 
     // convert the passed in python argument to C types.
-    if ( !PyArg_ParseTuple( pArgs, "iis#", &width, &height, &data, &dataLen ) )
+    if ( !PyArg_ParseTuple( pArgs, "iiy#", &width, &height, &data, &dataLen ) )
         return NULL;
 
     channels = dataLen / ( width * height );
@@ -101,7 +103,7 @@ PyObject *execute( PyObject *pself, PyObject *pArgs )
     free( histogram_sum );
 
     // Build and return a python tuple.
-    return Py_BuildValue( "(iis#)", width, height, data, dataLen );
+    return Py_BuildValue( "(iiy#)", width, height, data, dataLen );
 
 
 }
@@ -113,10 +115,20 @@ static PyMethodDef methods[ ] =
     { NULL, NULL } // End of functions
 };
 
-PyMODINIT_FUNC inithistogramEq( void )
+static struct PyModuleDef histogramEq_module = {
+    PyModuleDef_HEAD_INIT,
+    "ccore",
+    __doc__,
+    -1,
+    methods
+};
+
+PyMODINIT_FUNC PyInit_histogramEq( void )
 {
-    PyObject *m = Py_InitModule3( "histogramEq", methods, __doc__ );
+    PyObject *m = PyModule_Create(&histogramEq_module);
     PyModule_AddStringConstant( m, "MENU", "Fil&ter" );
     PyModule_AddStringConstant( m, "LABEL", "&Equalize Histogram" );
     PyModule_AddStringConstant( m, "DESCRIPTION", "Equalize the histogram of this image" );
+    return m;
 }
+

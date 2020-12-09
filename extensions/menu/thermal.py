@@ -26,10 +26,10 @@ MENU = "Fil&ter.&Comic"
 LABEL = "&Thermal Image"
 DESCRIPTION = "Some like it hot!"
 
-COLORS = '\x00\x00\x00' * 2 + '\x80\x00\xff' * 2 + \
-         '\x00\x00\xff' * 2 + '\x00\xff\xff' * 2 + \
-         '\x00\xff\x00' * 2 + '\xff\xff\x00' * 2 + \
-         '\xff\x80\x00' * 2 + '\xff\x00\x00' * 2
+COLORS = b'\x00\x00\x00' * 2 + b'\x80\x00\xff' * 2 + \
+         b'\x00\x00\xff' * 2 + b'\x00\xff\xff' * 2 + \
+         b'\x00\xff\x00' * 2 + b'\xff\xff\x00' * 2 + \
+         b'\xff\x80\x00' * 2 + b'\xff\x00\x00' * 2
 
 def execute( width, height, data ):
     """

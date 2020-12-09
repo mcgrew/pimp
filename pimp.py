@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 """
 pimp.py
 Copyright 2007 Thomas McGrew
@@ -22,25 +22,25 @@ along with The Python Image Manipulation Project.  If not, see
 
 #library imports
 import wx
+import wx.adv
 
 # local imports
 import editor
 
-SPLASHSCREEN = True
+SPLASHSCREEN = False
 
 # ========================================================= SPLASH SCREEN ====================================================================
-class Splash(wx.SplashScreen):
+class Splash(wx.adv.SplashScreen):
     """
     Create a splash screen widget.
     """
     def __init__(self, app, image):
         aBitmap = wx.Image(name = image).ConvertToBitmap()
         self.app = app
-        splashStyle = wx.SPLASH_CENTRE_ON_SCREEN | wx.SPLASH_TIMEOUT
+        splashStyle = wx.adv.SPLASH_CENTRE_ON_SCREEN | wx.adv.SPLASH_TIMEOUT
         splashDuration = 3000 # milliseconds
-        wx.SplashScreen.__init__(self, aBitmap, splashStyle, splashDuration, parent=None)
+        wx.adv.SplashScreen.__init__(self, aBitmap, splashStyle, splashDuration, parent=None)
         self.Bind(wx.EVT_CLOSE, self.onExit)
-        wx.Yield()
 
     def onExit(self, evt):
         self.Hide()

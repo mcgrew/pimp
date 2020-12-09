@@ -19,7 +19,7 @@ along with The Python Image Manipulation Project.  If not, see\n\
 <http://www.gnu.org/licenses/>.\n\
 ";
 
-
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
 /**
@@ -106,7 +106,8 @@ static char medianFilter__doc__[ ] =
 PyObject *medianFilter( PyObject *pself, PyObject *pArgs )
 {
     int i, j, k, m, position; // for loop variables
-    int width, height, dataLen;
+    int width, height;
+    Py_ssize_t dataLen;
     unsigned char *data, *newData;
     int size=3; // the default size for a median filter
     unsigned char *valueList; // the list of values to find the median of.
@@ -115,7 +116,7 @@ PyObject *medianFilter( PyObject *pself, PyObject *pArgs )
     int padding;
 
     // read in the arguments from python
-    if ( !PyArg_ParseTuple( pArgs, "iis#|i", &width, &height, &data, &dataLen, &size ) )
+    if ( !PyArg_ParseTuple( pArgs, "iiy#|i", &width, &height, &data, &dataLen, &size ) )
         return NULL;
 
     channels = dataLen / ( width * height );
@@ -128,7 +129,7 @@ PyObject *medianFilter( PyObject *pself, PyObject *pArgs )
     }
 
     valueListLength = size * size;
-    if ( !( valueList = ( char* )malloc( sizeof( char ) * valueListLength ) ) )
+    if ( !( valueList = ( unsigned char* )malloc( sizeof( char ) * valueListLength ) ) )
     {
         PyErr_SetString( PyExc_MemoryError, "Memory could not be allocated for the value array" );
         return NULL;
@@ -136,7 +137,7 @@ PyObject *medianFilter( PyObject *pself, PyObject *pArgs )
 
     padding = size / 2; // the padding ( border ) to leave around the image in the main loop
     
-    if( !( newData = ( char* )calloc( sizeof( char ), dataLen ) ) )
+    if( !( newData = ( unsigned char* )calloc( sizeof( char ), dataLen ) ) )
     {
         PyErr_SetString( PyExc_MemoryError, "Memory could not be allocated for the new image" );
         return NULL;
@@ -160,10 +161,9 @@ PyObject *medianFilter( PyObject *pself, PyObject *pArgs )
     }
     
     // Build a python tuple and return it.
-    return Py_BuildValue( "(iis#)", width, height, newData, dataLen );
+    return Py_BuildValue( "(iiy#)", width, height, newData, dataLen );
 
 }
-
 
 static PyMethodDef median_methods[ ] =
 {
@@ -171,11 +171,20 @@ static PyMethodDef median_methods[ ] =
     { NULL, NULL } // End of functions
 };
 
-PyMODINIT_FUNC initmedianFilter( void )
+static struct PyModuleDef median_module = {
+    PyModuleDef_HEAD_INIT,
+    "medianfilter",
+    __doc__,
+    -1,
+    median_methods
+};
+
+PyMODINIT_FUNC PyInit_medianFilter( void )
 {
-    PyObject *m = Py_InitModule3( "medianFilter", median_methods, __doc__ );
+    PyObject *m = PyModule_Create(&median_module);
     PyModule_AddStringConstant( m, "MENU", "Fil&ter" );
     PyModule_AddStringConstant( m, "LABEL", "&Median Filter" );
     PyModule_AddStringConstant( m, "DESCRIPTION", "Applies a median filter to the image" );
+    return m;
 }
 

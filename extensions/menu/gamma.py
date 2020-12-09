@@ -64,7 +64,7 @@ def execute( width, height, data, brightness=None, contrast=None, gamma=None ):
         gamma, brightness, contrast = values
     
     # build a substitution table
-    substTable = range( 256 )
+    substTable = list(range(256))
     
     for i in range( 256 ):
         substTable[ i ] = max( min( ( substTable[ i ] + brightness ), 255 ), 0 )

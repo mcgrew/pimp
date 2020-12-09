@@ -19,6 +19,7 @@ along with The Python Image Manipulation Project.  If not, see\n\
 <http://www.gnu.org/licenses/>.\n\
 ";
 
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
 #include "core.h"
 
@@ -40,11 +41,11 @@ static char toGrey__doc__[  ] =
 PyObject *toGrey( PyObject *pself, PyObject *pArgs )
 {
     unsigned int width, height, i;
-    unsigned int dataLen;
+    Py_ssize_t dataLen;
     unsigned char *data, channels;
 
     // convert the passed in python arguments to C types.
-    if ( !PyArg_ParseTuple( pArgs, "iis#", &width, &height, &data, &dataLen ) )
+    if ( !PyArg_ParseTuple( pArgs, "iiy#", &width, &height, &data, &dataLen ) )
         return NULL;
 
     channels = dataLen / ( width * height );
@@ -62,7 +63,7 @@ PyObject *toGrey( PyObject *pself, PyObject *pArgs )
     }
 
     // Build a python tuple and return it.
-    return Py_BuildValue( "(iis#)", width, height, data, dataLen );
+    return Py_BuildValue( "(iiy#)", width, height, data, dataLen );
 }
 
 
@@ -89,13 +90,13 @@ static char transform__doc__[  ] =
 PyObject *transform( PyObject *pself, PyObject *pArgs )
 {
     unsigned int width, height, i;
-    unsigned int dataLen;
+    Py_ssize_t dataLen;
     unsigned char *data, channels;
     pixel3 p3;
     float rr, rg, rb, gr, gg, gb, br, bg, bb; // float values used to transform the color.
 
     // convert the passed in python arguments to C types.
-    if ( !PyArg_ParseTuple( pArgs, "iis#(fffffffff)", &width, &height, &data, &dataLen, &rr, &rg, &rb, &gr, &gg, &gb, &br, &bg, &bb ) )
+    if ( !PyArg_ParseTuple( pArgs, "iiy#(fffffffff)", &width, &height, &data, &dataLen, &rr, &rg, &rb, &gr, &gg, &gb, &br, &bg, &bb ) )
         return NULL;
 
     channels = dataLen / ( width * height );
@@ -118,7 +119,7 @@ PyObject *transform( PyObject *pself, PyObject *pArgs )
     }
 
     // Build a python tuple and return it.
-    return Py_BuildValue( "(iis#)", width, height, data, dataLen );
+    return Py_BuildValue( "(iiy#)", width, height, data, dataLen );
 }
 
 static char channelBrightness__doc__[  ] =
@@ -139,13 +140,13 @@ static char channelBrightness__doc__[  ] =
 PyObject *channelBrightness( PyObject *pself, PyObject *pArgs )
 {
     unsigned int width, height, i;
-    unsigned int dataLen;
+    Py_ssize_t dataLen;
     unsigned char *data, channels;
     int r, g, b;
 
 
     // convert the passed in python arguments to C types.
-    if ( !PyArg_ParseTuple( pArgs, "iis#(iii)", &width, &height, &data, &dataLen, &r, &g, &b ) )
+    if ( !PyArg_ParseTuple( pArgs, "iiy#(iii)", &width, &height, &data, &dataLen, &r, &g, &b ) )
         return NULL;
 
     channels = dataLen / ( width * height );
@@ -164,7 +165,7 @@ PyObject *channelBrightness( PyObject *pself, PyObject *pArgs )
     }
 
     // Build a python tuple and return it.
-    return Py_BuildValue( "(iis#)", width, height, data, dataLen );
+    return Py_BuildValue( "(iiy#)", width, height, data, dataLen );
 }
 
 static char pseudocolor__doc__[  ] =
@@ -191,13 +192,13 @@ static char pseudocolor__doc__[  ] =
 PyObject *pseudocolor( PyObject *pself, PyObject *pArgs )
 {
     unsigned int width, height, i;
-    unsigned int dataLen, p3Len;
+    Py_ssize_t dataLen, p3Len;
     unsigned char *data, channels;
     pixel3 *p3, thisPixel;
 
 
     // convert the passed in python arguments to C types.
-    if ( !PyArg_ParseTuple( pArgs, "iis#s#", &width, &height, &data, &dataLen, ( char** )&p3, &p3Len ) )
+    if ( !PyArg_ParseTuple( pArgs, "iiy#s#", &width, &height, &data, &dataLen, ( char** )&p3, &p3Len ) )
         return NULL;
 
     channels = dataLen / ( width * height );
@@ -224,11 +225,11 @@ PyObject *pseudocolor( PyObject *pself, PyObject *pArgs )
     }
 
     // Build a python tuple and return it.
-    return Py_BuildValue( "(iis#)", width, height, data, dataLen );
+    return Py_BuildValue( "(iiy#)", width, height, data, dataLen );
 }
 
 
-static PyMethodDef core_methods[ ] =
+static PyMethodDef color_methods[ ] =
 {
 //  format is as follows:
 //  { "python_name"       , c_name            , arg_method  , doc_string               },
@@ -239,8 +240,16 @@ static PyMethodDef core_methods[ ] =
     { NULL, NULL } // End of functions
 };
 
-PyMODINIT_FUNC initcolor( void )
+static struct PyModuleDef color_module = {
+    PyModuleDef_HEAD_INIT,
+    "color",
+    __doc__,
+    -1,
+    color_methods
+};
+
+PyMODINIT_FUNC PyInit_color( void )
 {
-    ( void )Py_InitModule3( "color", core_methods, __doc__ );
+    return PyModule_Create(&color_module);
 }
 

@@ -78,7 +78,7 @@ def loadExtensions( ):
         exec ( "import %s" % moduleName )
         tmp = eval( moduleName )
         if ( "FILE_EXTENSION" in dir( tmp ) ):
-            if ( type( tmp.FILE_EXTENSION ) in ( types.ListType, types.TupleType ) ):
+            if ( type( tmp.FILE_EXTENSION ) in ( list, tuple ) ):
                 for ext in tmp.FILE_EXTENSION:
                     fileReader[ 'ext' ][ ext.lower( ) ] = tmp
             else:
@@ -255,7 +255,7 @@ class Frame( wx.Frame ):
         """
         Opens an image file
         """
-        dialog = wx.FileDialog( self, style = wx.OPEN )
+        dialog = wx.FileDialog( self, style = wx.FD_OPEN )
         if dialog.ShowModal( ) == wx.ID_OK:
             self.setImageFileName( dialog.GetPath( ) )
             self.setImage( read( self.imageFileName ) )
@@ -323,74 +323,56 @@ class Frame( wx.Frame ):
         # menu item extension path
         menuExtensionPkg = ( "extensions", "menu" )
         menuExtensionDir = os.path.join( os.getcwd( ), *menuExtensionPkg )
-    
+
         debug( "Loading menu items" )
         menuExtensions = glob( os.path.join( menuExtensionDir, '*%spy'%os.extsep ) ) + glob( os.path.join( menuExtensionDir, '*'+ C_EXTENSIONS ) )
         for f in menuExtensions:
             moduleFile = os.path.basename( f )
-            moduleName = '.'.join( menuExtensionPkg + ( moduleFile[ : moduleFile.rindex( "." ) ], ) )
-            exec( "import %s" % moduleName )
-            module = eval( moduleName )
-            #module = __import__( moduleFile[ : moduleFile.rindex( "." ) ] )
+            moduleName = '.'.join( menuExtensionPkg + ( moduleFile[ : moduleFile.index( "." ) ], ) )
+            module = getattr(__import__(moduleName).menu, moduleName[moduleName.rfind('.')+1:])
 
-            if ( "MENU" in dir( module ) and "LABEL" in dir( module ) ):
+            if ( "MENU" in dir(module) and "LABEL" in dir( module ) ):
                 self.extensions[ '.'.join( ( module.MENU, module.LABEL ) ) ] = module
-                
+
                 #insert this into the proper menu (and possibly submenu)
-                
+
                 # split up the menu path to see if it contains submenus
                 menuPath = module.MENU.split( '.' )
-                
-                menuPos = self.menuBar.FindMenu( menuPath[ 0 ] )
+
+                menuPos = self.menuBar.FindMenu( menuPath[ 0 ])
                 if ( menuPos == -1 ):
                     self.menuBar.Insert( self.menuBar.GetMenuCount( )-1, wx.Menu( ), menuPath[ 0 ] )
                     menuPos = self.menuBar.FindMenu( menuPath[ 0 ] )
+
                 menu = self.menuBar.GetMenu( menuPos )
-                
-                if ( len( menuPath ) <= 1 ):
-                    # This item is on the main menu
-                    if ( "DESCRIPTION" in dir( module ) ):
-                        description = module.DESCRIPTION
-                    else:
-                        description = str( )
-                    self.Bind( wx.EVT_MENU, self.filterHandler( module.execute ), menu.Append( -1, module.LABEL, description ) )
-                else:
-                    # this item is on a submenu, call the function to handle this (recursively)
-                    self.addItemToSubmenu( module, menu )
-                debug ("Loaded " + moduleFile )
+                menu_list = self.findMenu(menu, menuPath[1:])
+                self.addItem(module, menu_list[-1] if len(menu_list) else menu)
+
             else:
                 # the module does not have the correct 'constants' defined.
                 debug( moduleFile + " is not a valid module." )
         debug( )
 
+    def findMenu(self, menu, menuPath):
+        if not len(menuPath):
+            return []
+        items = menu.GetMenuItems()
+        for m in items:
+            if hasattr(m, 'GetName'):
+                if m.GetName().replace('&', '') == menuPath[0].replace('&',''):
+                    return m, *self.findMenu(m, menuPath[1:])
+        m = menu.Append(-1, menuPath[0], wx.Menu())
+        return m, *self.findMenu(m, menuPath[1:])
 
-    def addItemToSubmenu( self, module, menu, menuPath = None):
-        """
-        Internal Function. Calls itself recursively to get the proper submenu for a extension.
-        """
-        # if the menu path isn't specified
-        # then determine the menu path from the module itself.
-        if ( menuPath == None ):
-            menuPath = module.MENU.split( '.' )[ 1: ]
-            
-        menuID = menu.FindItem( menuPath[ 0 ] )
-        if ( menuID < 0 ):
-            # this submenu isn't present, create it.
-            newMenu = menu.AppendMenu( -1, menuPath[ 0 ], wx.Menu( ) ).GetSubMenu( )
+    def addItem(self, module, menu):
+        if not hasattr(menu, 'Append'):
+            menu = menu.GetSubMenu()
+        if ( "DESCRIPTION" in dir( module ) ):
+            description = module.DESCRIPTION
         else:
-            newMenu = menu.FindItemById( menuID ).GetSubMenu( )
-            
-        if ( len( menuPath ) <= 1 ):
-            # no more submenus, load up the extension
-            if ( "DESCRIPTION" in dir( module ) ):
-                description = module.DESCRIPTION
-            else:
-                description = str( )
-            # create and bind a handler to a menuItem.
-            self.Bind( wx.EVT_MENU, self.filterHandler( module.execute ), newMenu.Append( -1, module.LABEL, description ) )
-        else:
-            # more submenus, recursively call this function.
-            self.addItemToSubmenu( module, newMenu, menuPath[ 1: ] )
+            description = str()
+        # create and bind a handler to a menuItem.
+        self.Bind(wx.EVT_MENU, self.filterHandler(module.execute), menu.Append(-1, module.LABEL, description))
 
     def filterHandler( self, handler ):
         """
@@ -399,7 +381,7 @@ class Frame( wx.Frame ):
         # define a new function and return it.
         def f( evt ):
             if ( self.image ):
-                newImageData = handler( self.image.getWidth( ), self.image.getHeight( ), extensions.lib.core.stringCopy( self.image.getData( ) ) )
+                newImageData = handler( self.image.getWidth( ), self.image.getHeight( ), extensions.lib.core.stringCopy( bytes(self.image.getData( )) ) )
             else:
                 handler( 1, 1, "\x00" )
                 newImageData = False
@@ -467,13 +449,13 @@ def read( filename ):
     """
     imageExt = filename[ filename.index( '.' ) + 1 : ].lower( ) # get the file extension
     try:
-        if not fileReader[ 'ext' ].has_key( imageExt ):
+        if not imageExt in fileReader[ 'ext' ]:
             raise UnsupportedImageTypeError( "File extension %s has no extension associated with it" % imageExt )
         if not ( "read" in dir( fileReader[ 'ext' ][ imageExt ] ) ):
             raise UnsupportedImageTypeError( "The extension for handling files of type '%s' contains no method for reading." % imageExt )
         imageData =  fileReader[ 'ext' ][ imageExt ].read( filename )
 
-    except ImageFormatError, message:
+    except ImageFormatError as message:
         debug( message )
         imageFile = open( filename, 'rb' )
         fileMarker = imageFile.read( 2 )
@@ -503,14 +485,14 @@ def log( string ):
         string : string
             The message to output to the log.
     """
-    print string
+    print(string)
 
 def debug( string="" ):
     """
     Internal Function that handles debug output for the program.
     """
     if DEBUG:
-        print string
+        print(string)
 
 
 loadExtensions( ) # call the function to load all available extensions.

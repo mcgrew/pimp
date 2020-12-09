@@ -22,6 +22,7 @@ All of the methods in this module can be called using extensions.lib.core\n\
 instead of cCore. All functions in this module are imported by that one.\n\
 ";
 
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
 #include <stdlib.h>
 #include <string.h>
@@ -42,10 +43,10 @@ static char stringCopy__doc__[ ] =
 PyObject *stringCopy( PyObject *pself, PyObject *pArgs )
 {
     char *data, *outData;
-    unsigned int dataLen;
+    Py_ssize_t dataLen;
     
     // convert the passed in python arguments to C types.
-    if ( !PyArg_ParseTuple( pArgs, "s#", &data, &dataLen ) )
+    if ( !PyArg_ParseTuple( pArgs, "y#", &data, &dataLen ) )
         return NULL;
 
     if( !( outData = malloc( dataLen ) ) )
@@ -57,7 +58,7 @@ PyObject *stringCopy( PyObject *pself, PyObject *pArgs )
     memcpy( outData, data, dataLen );
 
     // Build a python string and return it.
-    return Py_BuildValue( "s#",outData, dataLen );
+    return Py_BuildValue( "y#",outData, dataLen );
 
 
 }
@@ -93,7 +94,7 @@ PyObject *swapChannels( PyObject *pself, PyObject *pArgs )
     Py_ssize_t dataLen;
 
     // convert the passed in python arguments to C types.
-    if ( !PyArg_ParseTuple( pArgs, "iis#ii", &width, &height, &data, &dataLen, &channel1, &channel2 ) )
+    if ( !PyArg_ParseTuple( pArgs, "iiy#ii", &width, &height, &data, &dataLen, &channel1, &channel2 ) )
         return NULL;
 
     channels = dataLen / ( width * height );
@@ -125,7 +126,7 @@ PyObject *swapChannels( PyObject *pself, PyObject *pArgs )
     }
 
     // Build a python tuple and return it.
-    return Py_BuildValue( "(iis#)", width, height, data, dataLen );
+    return Py_BuildValue( "(iiy#)", width, height, data, dataLen );
 }
 
 
@@ -154,13 +155,13 @@ PyObject *table( PyObject *pself, PyObject *pArgs )
 {
     unsigned char *data;
     unsigned int width, height;
-    unsigned int dataLen;
+    Py_ssize_t dataLen;
     int channels;
 
     unsigned int i, sub_table[ 256 ];
 
     // convert the passed in python arguments to C types.
-    if ( !PyArg_ParseTuple( pArgs, "iis#(iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii)", &width, &height, &data, &dataLen,
+    if ( !PyArg_ParseTuple( pArgs, "iiy#(iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii)", &width, &height, &data, &dataLen,
         &sub_table[   0 ], &sub_table[   1 ], &sub_table[   2 ], &sub_table[   3 ], &sub_table[   4 ], &sub_table[   5 ], &sub_table[   6 ], &sub_table[   7 ],
         &sub_table[   8 ], &sub_table[   9 ], &sub_table[  10 ], &sub_table[  11 ], &sub_table[  12 ], &sub_table[  13 ], &sub_table[  14 ], &sub_table[  15 ],
         &sub_table[  16 ], &sub_table[  17 ], &sub_table[  18 ], &sub_table[  19 ], &sub_table[  20 ], &sub_table[  21 ], &sub_table[  22 ], &sub_table[  23 ],
@@ -222,7 +223,7 @@ PyObject *table( PyObject *pself, PyObject *pArgs )
 
     
     // Build and return a python tuple.
-    return Py_BuildValue( "(iis#)", width, height, data, dataLen );
+    return Py_BuildValue( "(iiy#)", width, height, data, dataLen );
 
 }
 
@@ -258,7 +259,7 @@ int parseFilter( PyObject *PyFilter, int **CFilter )
 
    for ( position = 0; position < numberOfFilterValues; position++ )
    {
-        (*CFilter)[ position ] = ( int )PyInt_AsLong( PyTuple_GetItem( PyFilter, position ) );
+        (*CFilter)[ position ] = ( int )PyLong_AS_LONG( PyTuple_GetItem( PyFilter, position ) );
    }
 
    return size;
@@ -292,14 +293,14 @@ PyObject *spatial( PyObject *pself, PyObject *pArgs )
     PyObject *PyFilter; // The Python version of the filter (tuple)
     int *filter; // The C version of the filter
     int width, height, i, j, k, m, position, tmp;
-    int dataLen; // the length of the data passed in
+    Py_ssize_t dataLen; // the length of the data passed in
     int filterTotal=0; // the total weight of the filter (the number to divide the total by
     int filterSize; // the width (and height) of the filter;
     int channels; // the number of channels in the passed in image ( 1-4 )
     int edgeSize, numberOfElements;
 
     // convert the passed in python arguments to C types.
-    if ( !PyArg_ParseTuple( pArgs, "iis#O!|i", &width, &height, &data, &dataLen, &PyTuple_Type, &PyFilter, &filterTotal ) )
+    if ( !PyArg_ParseTuple( pArgs, "iiy#O!|i", &width, &height, &data, &dataLen, &PyTuple_Type, &PyFilter, &filterTotal ) )
         return NULL;
 
     filterSize = ( int )PyTuple_Size( PyFilter );
@@ -396,7 +397,7 @@ PyObject *spatial( PyObject *pself, PyObject *pArgs )
     free( filter );
 
     // Build a python tuple and return it.
-    return Py_BuildValue( "(iis#)", width, height, outdata, dataLen );
+    return Py_BuildValue( "(iiy#)", width, height, outdata, dataLen );
 
 }
 
@@ -464,13 +465,14 @@ static char quickScale__doc__[  ] =
 PyObject *quickScale( PyObject *pself, PyObject *pArgs )
 {
     int i, j, k; //  loop variables
-    int width, height, dataLen, newWidth, newHeight, channels;
+    int width, height, newWidth, newHeight, channels;
+    Py_ssize_t dataLen;
     float xRatio, yRatio; // the scaling ratios
     unsigned char *data, *newData; // the image data
     int oldPosition, newPosition; // position pointers for the images
     
     // convert the passed in python argument to C types.
-    if ( !PyArg_ParseTuple( pArgs, "iis#ii", &width, &height, &data, &dataLen, &newWidth, &newHeight ) )
+    if ( !PyArg_ParseTuple( pArgs, "iiy#ii", &width, &height, &data, &dataLen, &newWidth, &newHeight ) )
         return NULL;
 
     channels = dataLen / ( width * height );
@@ -506,7 +508,7 @@ PyObject *quickScale( PyObject *pself, PyObject *pArgs )
     }
     
     // Build a python tuple and return it.
-    return Py_BuildValue( "(iis#)",  newWidth, newHeight, newData, ( newWidth * newHeight * channels ) );
+    return Py_BuildValue( "(iiy#)",  newWidth, newHeight, newData, ( newWidth * newHeight * channels ) );
 }
 
 static char toRGB__doc__[  ] =
@@ -517,7 +519,7 @@ static char toRGB__doc__[  ] =
             The width of the image being converted\n\
         height : int\n\
             The height of the image being converted\n\
-        data : string\n\
+        data : bytes\n\
             A string containing the data for the image\n\
     \n\
     :rtype: tuple\n\
@@ -526,12 +528,12 @@ static char toRGB__doc__[  ] =
 
 PyObject *toRGB( PyObject *pself, PyObject *pArgs )
 {
-       unsigned int width, height, i;
-       unsigned int dataLen, pixelCount;
+       unsigned int width, height, i, pixelCount;
+       Py_ssize_t dataLen;
        unsigned char *data, *newData, channels;
 
     // convert the passed in python arguments to C types.
-    if ( !PyArg_ParseTuple( pArgs, "iis#", &width, &height, &data, &dataLen ) )
+    if ( !PyArg_ParseTuple( pArgs, "iiy#", &width, &height, &data, &dataLen ) )
         return NULL;
 
     channels = dataLen / ( width * height );
@@ -545,7 +547,7 @@ PyObject *toRGB( PyObject *pself, PyObject *pArgs )
     if ( channels == 3 )
     {
         // return the original data, it's already in RGB format.
-        return Py_BuildValue( "(iis#)", width, height, data, dataLen );
+        return Py_BuildValue( "(iiy#)", width, height, data, dataLen );
     }
 
     // allocate memory for the new data
@@ -565,7 +567,7 @@ PyObject *toRGB( PyObject *pself, PyObject *pArgs )
         newData[ i*3+2 ] = data[ i*channels+2 ];
     }
     // Build a python tuple and return it.
-    return Py_BuildValue( "(iis#)", width, height, newData, ( width * height * 3 ) );
+    return Py_BuildValue( "(iiy#)", width, height, newData, ( width * height * 3 ) );
 
 }
 
@@ -586,12 +588,12 @@ static char toRGBA__doc__[  ] =
 
 PyObject *toRGBA( PyObject *pself, PyObject *pArgs )
 {
-       unsigned int width, height, i;
-       unsigned int dataLen, pixelCount;
+       unsigned int width, height, i, pixelCount;
+       Py_ssize_t dataLen;
        unsigned char *data, *newData, channels;
 
     // convert the passed in python arguments to C types.
-    if ( !PyArg_ParseTuple( pArgs, "iis#", &width, &height, &data, &dataLen ) )
+    if ( !PyArg_ParseTuple( pArgs, "iiy#", &width, &height, &data, &dataLen ) )
         return NULL;
 
     channels = dataLen / ( width * height );
@@ -605,7 +607,7 @@ PyObject *toRGBA( PyObject *pself, PyObject *pArgs )
     if ( channels == 4 )
     {
         // return the original data, it's already in RGBA format.
-        return Py_BuildValue( "(iis#)", width, height, data, dataLen );
+        return Py_BuildValue( "(iiy#)", width, height, data, dataLen );
     }
 
     // allocate memory for the new data
@@ -626,12 +628,12 @@ PyObject *toRGBA( PyObject *pself, PyObject *pArgs )
         newData[ i*4+3 ] = 255;
     }
     // Build a python tuple and return it.
-    return Py_BuildValue( "(iis#)", width, height, newData, ( width * height * 4 ) );
+    return Py_BuildValue( "(iiy#)", width, height, newData, ( width * height * 4 ) );
 
 }
 
 // map of function names to functions
-static PyMethodDef core_methods[ ] =
+static struct PyMethodDef core_methods[ ] =
 {
 //  format is as follows:
 //  { "python_name"  , c_name     , arg_method  , doc_string          },
@@ -645,9 +647,17 @@ static PyMethodDef core_methods[ ] =
     { NULL, NULL } // End of functions
 };
 
-PyMODINIT_FUNC initcCore( void )
+static struct PyModuleDef core_module = {
+    PyModuleDef_HEAD_INIT,
+    "ccore",
+    __doc__,
+    -1,
+    core_methods
+};
+
+PyMODINIT_FUNC PyInit_cCore( void )
 {
-    ( void )Py_InitModule3( "cCore", core_methods, __doc__ );
+    return PyModule_Create(&core_module);
 }
 
 

@@ -52,14 +52,14 @@ all_modules = compiled_plugins + compiled_libs
 modules = [ ]
 for m in all_modules:
     modules.append( Extension( m, include_dirs = INCLUDE, sources = [ m+'.c' ] ) )
-setup( name = m, version = '0.1', ext_modules = modules )
+setup( name = m, version = '0.2', ext_modules = modules )
 
-print
+print()
 
 for m in compiled_plugins:
     for filename in glob( os.path.join( "build", "lib.*", m+".*" ) ):
         pluginpath = os.path.join( os.path.pardir, 'extensions','menu', os.path.basename( filename ) )
-        print "moving", os.path.basename( filename ), "->", pluginpath
+        print("moving", os.path.basename( filename ), "->", pluginpath)
         #if the compiled file already exists, we have to remove it to make windows happy
         if os.path.exists( pluginpath ):
             os.remove( pluginpath )
@@ -69,7 +69,7 @@ for m in compiled_plugins:
 for m in compiled_libs:
     for filename in glob( os.path.join( "build", "lib.*", m+".*" ) ):
         pluginpath = os.path.join( os.path.pardir, 'extensions','lib', os.path.basename( filename ) )
-        print "moving", os.path.basename( filename ), "->", pluginpath
+        print("moving", os.path.basename( filename ), "->", pluginpath)
         #if the compiled file already exists, we have to remove it to make windows happy
         if os.path.exists( pluginpath ):
             os.remove( pluginpath )
