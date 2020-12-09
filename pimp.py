@@ -27,7 +27,7 @@ import wx.adv
 # local imports
 import editor
 
-SPLASHSCREEN = False
+SPLASHSCREEN = True
 
 # ========================================================= SPLASH SCREEN ====================================================================
 class Splash(wx.adv.SplashScreen):
