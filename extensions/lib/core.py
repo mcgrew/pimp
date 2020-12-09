@@ -41,8 +41,8 @@ def dataToBitmap( width, height, data ):
     :returns: a wx.Bitmap containing the image data.
     """
     
-    image = EmptyImage( width, height )
-    image.SetData( toRGB( width, height, data )[ 2 ] )
+    image = Image( width, height )
+    image.SetData( toRGB( width, height, bytes(data) )[ 2 ] )
     return image.ConvertToBitmap( )
     
 

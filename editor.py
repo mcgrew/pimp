@@ -192,9 +192,9 @@ class Frame( wx.Frame ):
             # turn off the scrollbars by default
             xScroll = 0
             yScroll = 0
-            if ( self.GetSizeTuple( )[ 0 ] < self.panel.GetSizeTuple( )[ 0 ] + 5 ):
+            if ( self.GetSize( )[ 0 ] < self.panel.GetSize( )[ 0 ] + 5 ):
                 xScroll = 5 # enable the horizontal scrollbar
-            if ( self.GetSizeTuple( )[ 1 ] < self.panel.GetSizeTuple( )[ 1 ]  + 52 ):
+            if ( self.GetSize( )[ 1 ] < self.panel.GetSize( )[ 1 ]  + 52 ):
                 yScroll = 5 # enable the vertical scrollbar
             self.scroller.SetScrollRate( xScroll, yScroll )
 
