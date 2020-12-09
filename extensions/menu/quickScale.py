@@ -76,26 +76,26 @@ class scaleDialog( wx.Dialog ):
             maxResolution : int
                 The maximim value to be available on the resolution slider. Defaults to 500.
         """
-        wx.Dialog.__init__( self, None, -1, title, wx.DefaultPosition, ( 240, 110 ) )
+        wx.Dialog.__init__( self, None, -1, title, wx.DefaultPosition, ( 240, 165 ) )
 
         
-        self.widthEntry  = wx.TextCtrl( self, -1, value = str( defaultWidth ),  pos = ( 70, 30 ), size = ( 100, 20 ) )
-        self.heightEntry = wx.TextCtrl( self, -1, value = str( defaultHeight ), pos = ( 70, 50 ), size = ( 100, 20 ) )
+        self.widthEntry  = wx.TextCtrl( self, -1, value = str( defaultWidth ),  pos = ( 70, 35 ), size = ( 100, 20 ) )
+        self.heightEntry = wx.TextCtrl( self, -1, value = str( defaultHeight ), pos = ( 70, 65 ), size = ( 100, 20 ) )
         self.widthEntry.SetMaxLength(  5 )
         self.heightEntry.SetMaxLength( 5 )
 
-        self.displayPanel   = wx.Panel( self, -1, pos = ( 180, 10 ), size = ( 50, 60 ) )
-        self.headingDisplay = wx.StaticText( self.displayPanel, pos = ( 0,  0 ), label="Original Size" )
-        self.widthDisplay   = wx.StaticText( self.displayPanel, pos = ( 0, 20 ), label=str( defaultWidth  ) )
-        self.heightDisplay  = wx.StaticText( self.displayPanel, pos = ( 0, 40 ), label=str( defaultHeight ) )
+        self.displayPanel   = wx.Panel( self, -1, pos = ( 180, 10 ), size = ( 70, 75 ) )
+        self.headingDisplay = wx.StaticText( self.displayPanel, pos = ( 0,  0 ), label="Original" )
+        self.widthDisplay   = wx.StaticText( self.displayPanel, pos = ( 0, 25 ), label=str( defaultWidth  ) )
+        self.heightDisplay  = wx.StaticText( self.displayPanel, pos = ( 0, 55 ), label=str( defaultHeight ) )
 
-        self.labelPanel = wx.Panel( self, -1, pos = ( 10, 30 ), size = ( 50, 40 ) )
+        self.labelPanel = wx.Panel( self, -1, pos = ( 10, 35 ), size = ( 50, 50 ) )
         self.widthLabel = wx.StaticText( self.labelPanel, pos = ( 0,  0 ), label=" Width" )
-        self.heightLabel   = wx.StaticText( self.labelPanel, pos = ( 0, 20 ), label="Height" )
+        self.heightLabel   = wx.StaticText( self.labelPanel, pos = ( 0, 30 ), label="Height" )
 
         self.isOk = False
-        okButton     = wx.Button( self, id = wx.ID_OK,     pos = (  30, 70 ), size = ( 80, 30 ) )
-        cancelButton = wx.Button( self, id = wx.ID_CANCEL, pos = ( 130, 70 ), size = ( 80, 30 ) )
+        okButton     = wx.Button( self, id = wx.ID_OK,     pos = (  30, 95 ), size = ( 80, 30 ) )
+        cancelButton = wx.Button( self, id = wx.ID_CANCEL, pos = ( 130, 95 ), size = ( 80, 30 ) )
 
         if okFunction:
             self.okFunction = okFunction

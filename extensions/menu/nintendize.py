@@ -86,25 +86,25 @@ class nintendizeDialog( wx.Dialog ):
             maxResolution : int
                 The maximim value to be available on the resolution slider. Defaults to 500.
         """
-        wx.Dialog.__init__( self, None, -1, title, wx.DefaultPosition, ( 320, 90 ) )
+        wx.Dialog.__init__( self, None, -1, title, wx.DefaultPosition, ( 330, 140 ) )
 
         self.resolutionValue = 200
         self.colorLevelValue = 2
         
-        self.resolutionSlider = wx.Slider( self, -1, value = self.resolutionValue, minValue = 1, maxValue = maxResolution, pos = ( 70, 10 ), size = ( 200, 20 ) )
-        self.colorLevelSlider   = wx.Slider( self, -1, value = self.colorLevelValue, minValue =  1, maxValue =  8, pos = ( 70, 30 ), size = ( 200, 20 ) )
+        self.resolutionSlider = wx.Slider( self, -1, value = self.resolutionValue, minValue = 1, maxValue = maxResolution, pos = ( 80, 10 ), size = ( 200, 30 ) )
+        self.colorLevelSlider   = wx.Slider( self, -1, value = self.colorLevelValue, minValue =  1, maxValue =  8, pos = ( 80, 40 ), size = ( 200, 30 ) )
 
-        self.displayPanel = wx.Panel( self, -1, pos = ( 270, 10 ), size = ( 50, 100 ) )
-        self.resolutionDisplay = wx.StaticText( self.displayPanel, pos = ( 0,  0 ) )
-        self.colorLevelDisplay   = wx.StaticText( self.displayPanel, pos = ( 0, 20 ) )
+        self.displayPanel = wx.Panel( self, -1, pos = ( 280, 10 ), size = ( 60, 100 ) )
+        self.resolutionDisplay = wx.StaticText( self.displayPanel, pos = ( 0,  5 ) )
+        self.colorLevelDisplay   = wx.StaticText( self.displayPanel, pos = ( 0, 35 ) )
 
-        self.labelPanel = wx.Panel( self, -1, pos = ( 0, 10 ), size = ( 70, 40 ) )
-        self.resolutionLabel = wx.StaticText( self.labelPanel, pos = ( 0,  0 ), label="Resolution" )
-        self.colorLevelLabel   = wx.StaticText( self.labelPanel, pos = ( 0, 20 ), label="Color Level"   )
+        self.labelPanel = wx.Panel( self, -1, pos = ( 10, 10 ), size = ( 70, 60 ) )
+        self.resolutionLabel = wx.StaticText( self.labelPanel, pos = ( 0,  5 ), label="Resolution" )
+        self.colorLevelLabel   = wx.StaticText( self.labelPanel, pos = ( 0, 35 ), label="Color Level"   )
 
         self.isOk = False
-        okButton     = wx.Button( self, id = wx.ID_OK,     pos = (  60, 50 ), size = ( 80, 30 ) )
-        cancelButton = wx.Button( self, id = wx.ID_CANCEL, pos = ( 160, 50 ), size = ( 80, 30 ) )
+        okButton     = wx.Button( self, id = wx.ID_OK,     pos = (  65, 70 ), size = ( 80, 30 ) )
+        cancelButton = wx.Button( self, id = wx.ID_CANCEL, pos = ( 165, 70 ), size = ( 80, 30 ) )
 
         if okFunction:
             self.okFunction = okFunction

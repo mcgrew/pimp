@@ -79,21 +79,21 @@ class medianFilterDialog( wx.Dialog ):
             title : String
                 The title of the dialog box to be displayed in the titlebar. Defaults to "Median Filter Options".
         """
-        wx.Dialog.__init__( self, None, -1, title, wx.DefaultPosition, ( 320, 70 ) )
+        wx.Dialog.__init__( self, None, -1, title, wx.DefaultPosition, ( 320, 130 ) )
 
         self.filterSizeValue = 3
         
-        self.filterSizeSlider   = wx.Slider( self, -1, value = self.filterSizeValue, minValue =  3, maxValue =  15, pos = ( 70, 10 ), size = ( 200, 20 ) )
+        self.filterSizeSlider   = wx.Slider( self, -1, value = self.filterSizeValue, minValue =  3, maxValue =  15, pos = ( 80, 10 ), size = ( 200, 30 ) )
         
-        self.displayPanel = wx.Panel( self, -1, pos = ( 270, 10 ), size = ( 50, 20 ) )
-        self.filterSizeDisplay   = wx.StaticText( self.displayPanel, pos = ( 0, 0 ) )
+        self.displayPanel = wx.Panel( self, -1, pos = ( 280, 10 ), size = ( 50, 30 ) )
+        self.filterSizeDisplay   = wx.StaticText( self.displayPanel, pos = ( 0, 5 ) )
 
-        self.labelPanel = wx.Panel( self, -1, pos = ( 0, 10 ), size = ( 70, 20 ) )
-        self.filterSizeLabel   = wx.StaticText( self.labelPanel, pos = ( 0, 0 ), label="Filter Size"   )
+        self.labelPanel = wx.Panel( self, -1, pos = ( 10, 10 ), size = ( 70, 30 ) )
+        self.filterSizeLabel   = wx.StaticText( self.labelPanel, pos = ( 0, 5 ), label="Filter Size"   )
 
         self.isOk = False
-        okButton     = wx.Button( self, id = wx.ID_OK,     pos = (  60, 30 ), size = ( 80, 30 ) )
-        cancelButton = wx.Button( self, id = wx.ID_CANCEL, pos = ( 160, 30 ), size = ( 80, 30 ) )
+        okButton     = wx.Button( self, id = wx.ID_OK,     pos = (  65, 50 ), size = ( 80, 30 ) )
+        cancelButton = wx.Button( self, id = wx.ID_CANCEL, pos = ( 165, 50 ), size = ( 80, 30 ) )
 
         if okFunction:
             self.okFunction = okFunction
