@@ -277,7 +277,7 @@ class Frame( wx.Frame ):
         """
         Saves the file under a different filename
         """
-        dialog = wx.FileDialog( self, style = wx.SAVE )
+        dialog = wx.FileDialog( self, style = wx.FD_SAVE )
         if dialog.ShowModal( ) == wx.ID_OK:
             self.setImageFileName( dialog.GetPath( ) )
             self.saveFile( )
