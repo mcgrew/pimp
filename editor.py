@@ -255,14 +255,20 @@ class Frame( wx.Frame ):
         """
         Opens an image file
         """
-        dialog = wx.FileDialog( self, style = wx.FD_OPEN )
-        if dialog.ShowModal( ) == wx.ID_OK:
-            self.setImageFileName( dialog.GetPath( ) )
-            self.setImage( read( self.imageFileName ) )
+        filename = None
+        if type(event) is str:
+            filename = event
+        if not filename:
+            dialog = wx.FileDialog( self, style = wx.FD_OPEN )
+            if dialog.ShowModal( ) == wx.ID_OK:
+                filename = dialog.GetPath()
+            dialog.Destroy( )
+        if filename:
+            self.setImageFileName(filename)
+            self.setImage(read(filename))
             # clear the undo and redo stacks
             self.undoStack = list( )
             self.redoStack = list( )
-        dialog.Destroy( )
 
     def saveFile( self, event=None ):
         """

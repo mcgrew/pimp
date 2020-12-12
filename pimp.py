@@ -21,6 +21,8 @@ along with The Python Image Manipulation Project.  If not, see
 """
 
 #library imports
+import sys
+import os
 import wx
 import wx.adv
 
@@ -29,7 +31,6 @@ import editor
 
 SPLASHSCREEN = True
 
-# ========================================================= SPLASH SCREEN ====================================================================
 class Splash(wx.adv.SplashScreen):
     """
     Create a splash screen widget.
@@ -56,10 +57,15 @@ class App( wx.App ):
     """
     def OnInit( self ):
         self.frame = editor.Frame( )
-        if SPLASHSCREEN:
+        filename = None
+        if len(sys.argv) >= 2 and os.path.exists(sys.argv[1]):
+            filename = sys.argv[1]
+        if SPLASHSCREEN and not filename:
             splash = Splash( self, "splash.bmp" )
         else:
             self.frame.Show( True )
+            if filename:
+                self.frame.openFile(filename)
         return True
 
 if __name__ == "__main__":
