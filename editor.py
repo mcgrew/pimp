@@ -432,11 +432,14 @@ def write( filename, image ):
     width, height = image.getSize( )
     imageExt = filename[ filename.index( '.' ) + 1 : ].lower( ) # get the file extension
     
-    if not fileReader[ 'ext' ].has_key( imageExt ):
+    if imageExt not in fileReader[ 'ext' ]:
         raise UnsupportedImageTypeError( "File extension %s has no extension associated with it" % imageExt )
     if not ( "write" in dir( fileReader[ 'ext' ][ imageExt ] ) ):
         raise UnsupportedImageTypeError( "The extension for handling files of type '%s' contains no method for writing." % imageExt )
-    return fileReader[ 'ext' ][ imageExt ].write( filename, image.getWidth( ), image.getHeight( ), extensions.lib.core.stringCopy( image.getData( ) ) )
+    try:
+        return fileReader[ 'ext' ][ imageExt ].write(filename, image.getWidth(), image.getHeight(), extensions.lib.core.stringCopy(bytes(image.getData())))
+    except:
+        raise # TODO: show an error dialog
 
 
 def read( filename ):
@@ -460,7 +463,7 @@ def read( filename ):
         imageFile = open( filename, 'rb' )
         fileMarker = imageFile.read( 2 )
         imageFile.close(  )
-        if not fileReader[ 'marker' ].has_key( fileMarker ):
+        if not fileMarker not in fileReader[ 'marker' ]:
             imageFile.close( )
             raise UnsupportedImageTypeError( "This image type has no extension associated with it" )
         try: # in case the extension doesn't define a description field (it should)
