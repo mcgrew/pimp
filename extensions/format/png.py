@@ -21,7 +21,7 @@ along with The Python Image Manipulation Project.  If not, see
 
 # I'm taking the easy way out for now in this one.
 
-from wx import EmptyImage, Image, BITMAP_TYPE_PNG
+from wx import Image, BITMAP_TYPE_PNG
 from extensions.lib.core import toRGB
 
 # register the extension(s) for this to read
@@ -65,7 +65,7 @@ def write( filename, width, height, data ):
     :returns: True on success
     """
     data = toRGB( width, height, data )[ 2 ]
-    image = EmptyImage( width, height )
+    image = Image( width, height )
     image.SetData( data )
     image.SaveFile( name = filename, type = BITMAP_TYPE_PNG )
     return True
