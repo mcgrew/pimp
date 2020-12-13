@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 """
 Copyright 2007 Thomas McGrew
 
@@ -34,16 +34,16 @@ if not ( 'build' in argv ):
 INCLUDE = [ ]
 
 compiled_plugins =  [
-                        'histogramEq',
+                        'histogram_eq',
                         'invert',
                     ]
 
 
 compiled_libs    =  [
-                        'cCore',
+                        'ccore',
                         'color',
                         'nintendize',
-                        'medianFilter',
+                        'median_filter',
                     ]
 
 all_modules = compiled_plugins + compiled_libs

@@ -1,5 +1,5 @@
 """
-swapRedBlue.py
+swapGreenBlue.py
 Copyright 2007 Thomas McGrew
 
 This file is part of The Python Image Manipulation Project.
@@ -20,16 +20,16 @@ along with The Python Image Manipulation Project.  If not, see
 
 """
 
-from extensions.lib.core import swapChannels
+from extensions.lib.core import swap_channels
 
 MENU = "&Image.S&wap Channels"
-LABEL = "Red <-> Blue"
-DESCRIPTION = "Swap the red and blue channels in this image"
+LABEL = "Green <-> Blue"
+DESCRIPTION = "Swap the green and blue channels in this image"
 
-def execute( width, height, data ):
+def execute(width, height, data):
     """
-    Swaps the red and blue channels in an image.
-        
+    Swaps the green and blue channels in an image.
+
     :Parameters:
         width : int
             The width of the image being converted
@@ -37,10 +37,11 @@ def execute( width, height, data ):
             The height of the image being converted
         data : string
             A string containing the data for the image
-    
+
     :rtype: tuple
     :returns: a tuple containing a width, height, and data as a binary string.
     """
-    channels = len( data ) // ( width * height )
-    if channels in ( 3, 4 ):
-        return swapChannels( width, height, data, 0, 2 )
+    channels = len(data) // (width * height)
+    if channels in (3, 4):
+        return swap_channels(width, height, data, 1, 2)
+    return width, height, data

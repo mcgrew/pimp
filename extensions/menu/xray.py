@@ -1,5 +1,5 @@
 """
-swapRedGreen.py
+edge_detect.py
 Copyright 2007 Thomas McGrew
 
 This file is part of The Python Image Manipulation Project.
@@ -20,16 +20,19 @@ along with The Python Image Manipulation Project.  If not, see
 
 """
 
-from extensions.lib.core import swapChannels
+from extensions.lib.color import to_grey
+from extensions.menu.invert import execute as invert
 
-MENU = "&Image.S&wap Channels"
-LABEL = "Red <-> Green"
-DESCRIPTION = "Swap the red and green channels in this image"
+MENU = "Fil&ter.&Comic"
+LABEL = "X-Ray"
+DESCRIPTION = "I can see inside you..."
 
-def execute( width, height, data ):
+
+def execute(width, height, data):
     """
-    Swaps the red and green channels in an Image.
-        
+    Changes an image to greyscale and inverts the colors so as to make it
+    appear more like an x-ray photo.
+
     :Parameters:
         width : int
             The width of the image being converted
@@ -37,10 +40,8 @@ def execute( width, height, data ):
             The height of the image being converted
         data : string
             A string containing the data for the image
-    
+
     :rtype: tuple
     :returns: a tuple containing a width, height, and data as a binary string.
     """
-    channels = len( data ) // ( width * height )
-    if channels in ( 3, 4 ):
-        return swapChannels( width, height, data, 0, 1 )
+    return invert(*to_grey(width, height, data))

@@ -22,16 +22,16 @@ along with The Python Image Manipulation Project.  If not, see
 # I'm taking the easy way out for now in this one.
 
 from wx import Image, BITMAP_TYPE_PNG
-from extensions.lib.core import toRGB
+from extensions.lib.core import to_rgb
 
 # register the extension(s) for this to read
-FILE_EXTENSION = ( "png",)
-# register the file marker for this format ( beginning of the file data )
-FILE_MARKER = "\x89PNG\r\n\x1a\n"
+FILE_EXTENSION = ("png",)
+# register the file marker for this format (beginning of the file data)
+FILE_MARKER = b"\x89PNG\r\n\x1a\n"
 # description of this format
 DESCRIPTION = "PNG Format"
 
-def read( filename ):
+def read(filename):
     """
     Reads a png file.
 
@@ -40,7 +40,9 @@ def read( filename ):
             the name of the file to be read.
 
     :rtype: tuple
-    :returns: A tuple ( width, height, data ). Width and height are in pixels, data is a string containing chr(red) + chr(green) + chr(blue) for each pixel.
+    :returns: A tuple (width, height, data). Width and height are in pixels,
+        data is a string containing chr(red) + chr(green) + chr(blue) for each
+        pixel.
     """
     image = Image( name = filename )
     return ( image.GetWidth( ), image.GetHeight( ), image.GetData( ) )
@@ -64,8 +66,8 @@ def write( filename, width, height, data ):
     :rtype: boolean
     :returns: True on success
     """
-    data = toRGB( width, height, data )[ 2 ]
-    image = Image( width, height )
-    image.SetData( data )
-    image.SaveFile( name = filename, type = BITMAP_TYPE_PNG )
+    data = to_rgb(width, height, data)[2]
+    image = Image(width, height)
+    image.SetData(data)
+    image.SaveFile(name = filename, type = BITMAP_TYPE_PNG)
     return True

@@ -17,15 +17,6 @@
 #define min(x,y) (x < y ? x : y)
 #endif
 
-// Python < 2.5 compatibility. The Py_ssize_t type is used
-// for some functions in the Python 2.5 C API, but it is not
-// defined in Python 2.4. The data type should be 32 bits.
-#if PY_VERSION_HEX < 0x02050000 && !defined(PY_SSIZE_T_MIN)
-    typedef int Py_ssize_t;
-    #define PY_SSIZE_T_MAX INT_MAX
-    #define PY_SSIZE_T_MIN INT_MIN
-#endif
-
 // a data type for a 3 channel pixel
 typedef struct {
     unsigned char red;

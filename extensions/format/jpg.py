@@ -22,12 +22,12 @@ along with The Python Image Manipulation Project.  If not, see
 # I'm taking the easy way out for now in this one.
 
 from wx import Image, BITMAP_TYPE_JPEG
-from extensions.lib.core import toRGB
+from extensions.lib.core import to_rgb
 
 # register the extension(s) for this to read
-FILE_EXTENSION = ( "jpg", "jpeg" )
-# register the file marker for this format ( beginning of the file data )
-FILE_MARKER = "\xff\xe0"
+FILE_EXTENSION = ("jpg", "jpeg")
+# register the file marker for this format (beginning of the file data)
+FILE_MARKER = b"\xff\xe0"
 # description of this format
 DESCRIPTION = "Jpeg Format"
 
@@ -40,14 +40,16 @@ def read( filename ):
             the name of the file to be read.
 
     :rtype: tuple
-    :returns: A tuple ( width, height, data ). Width and height are in pixels, data is a string containing chr(red) + chr(green) + chr(blue) for each pixel.
+    :returns: A tuple (width, height, data). Width and height are in pixels,
+        data is a string containing chr(red) + chr(green) + chr(blue) for each
+        pixel.
     """
-    image = Image( name = filename )
-    return ( image.GetWidth( ), image.GetHeight( ), image.GetData( ) )
+    image = Image(name = filename)
+    return (image.GetWidth(), image.GetHeight(), image.GetData())
 
 
 
-def write( filename, width, height, data ):
+def write(filename, width, height, data):
     """
     Writes data out to a jpeg file.
 
@@ -64,8 +66,8 @@ def write( filename, width, height, data ):
     :rtype: boolean
     :returns: True on success
     """
-    data = toRGB( width, height, data )[ 2 ]
-    image = Image( width, height )
-    image.SetData( data )
-    image.SaveFile( name = filename, type = BITMAP_TYPE_JPEG )
+    data = to_rgb(width, height, data)[2]
+    image = Image(width, height)
+    image.SetData(data)
+    image.SaveFile(name = filename, type = BITMAP_TYPE_JPEG)
     return True

@@ -1,5 +1,5 @@
 """
-toGrey.py
+edge_detect.py
 Copyright 2007 Thomas McGrew
 
 This file is part of The Python Image Manipulation Project.
@@ -20,26 +20,30 @@ along with The Python Image Manipulation Project.  If not, see
 
 """
 
+from extensions.lib.core import spatial
 
-#MENU = "&Image.&Mode"
-#LABEL = "Greyscale"
-#DESCRIPTION = "Convert the image to greyscale."
+MENU = "Fil&ter.&Edge Detect"
+LABEL = "Laplacian"
+DESCRIPTION = "Laplacian Edge Detect"
 
-def execute( width, height, data ):
-    
-    data = [ ord( c ) for c in data ]
-    newData = [ 0 ] * ( width * height )
-
-    channels = len( data ) / ( width * height )
-
-    if channels >= 3:
-        for i in range( width * height ):
-            newData[ i ] = ( data[ i*channels ] + data[ i*channels+1 ] + data[ i*channels+2 ] ) / 3
-
-    data = [ chr( i ) for i in newData ]
-
-    data = ''.join( data )
+FILTER = (1,  1,  1,
+          1, -8,  1,
+          1,  1,  1 )
 
 
-    return ( width, height, data )
-    
+def execute(width, height, data):
+    """
+    Performs a Laplacian Edge Detect.
+
+    :Parameters:
+        width : int
+            The width of the image being converted
+        height : int
+            The height of the image being converted
+        data : string
+            A string containing the data for the image
+
+    :rtype: tuple
+    :returns: a tuple containing a width, height, and data as a binary string.
+    """
+    return spatial(width, height, data, FILTER)

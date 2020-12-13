@@ -1,5 +1,5 @@
 """
-swapGreenBlue.py
+edge_detect.py
 Copyright 2007 Thomas McGrew
 
 This file is part of The Python Image Manipulation Project.
@@ -20,16 +20,21 @@ along with The Python Image Manipulation Project.  If not, see
 
 """
 
-from extensions.lib.core import swapChannels
+from extensions.lib.core import spatial
 
-MENU = "&Image.S&wap Channels"
-LABEL = "Green <-> Blue"
-DESCRIPTION = "Swap the green and blue channels in this image"
+MENU = "Fil&ter.&Edge Detect"
+LABEL = "Sobel"
+DESCRIPTION = "Sobel Algorithm"
 
-def execute( width, height, data ):
+FILTER = (-1,  0,  1,
+          -2,  0,  2,
+          -1,  0,  1 )
+
+
+def execute(width, height, data):
     """
-    Swaps the green and blue channels in an image.
-        
+    Applies a Sobel edge detect algorithm on the image.
+
     :Parameters:
         width : int
             The width of the image being converted
@@ -37,10 +42,8 @@ def execute( width, height, data ):
             The height of the image being converted
         data : string
             A string containing the data for the image
-    
+
     :rtype: tuple
     :returns: a tuple containing a width, height, and data as a binary string.
     """
-    channels = len( data ) // ( width * height )
-    if channels in ( 3, 4 ):
-        return swapChannels( width, height, data, 1, 2 )
+    return spatial(width, height, data, FILTER)

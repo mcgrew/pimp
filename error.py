@@ -19,37 +19,32 @@ along with The Python Image Manipulation Project.  If not, see
 <http://www.gnu.org/licenses/>.
 """
 
-# make sure BaseException is defined
-try:
-    BaseException
-except:
-    BaseException = Exception
-
-class ImageFormatError( BaseException ):
+class ImageFormatError(Exception):
     """
     An exception to be raised in the event of a problem reading the file.
     """
-    def __init__( self, message = None ):
-        Exception.__init__( self, message )
+    def __init__(self, message = None):
+        Exception.__init__(self, message)
 
-class ImageReadError( BaseException ):
+class ImageReadError(Exception):
     """
     An exception to be raised in the event of a problem reading the file.
     """
-    def __init__( self, message = None ):
-        Exception.__init__( self, message )
+    def __init__(self, message = None):
+        Exception.__init__(self, message)
 
-class UnsupportedImageTypeError( BaseException ):
+class UnsupportedImageTypeError(Exception):
     """
     An exception to be raised in the event that there is no plugin to handle
     the specified image format.
     """
-    def __init__( self, message = None ):
-        Exception.__init__( self, message )
+    def __init__(self, message = None):
+        Exception.__init__(self, message)
 
-class ExtensionError( BaseException ):
+class ExtensionError(Exception):
     """
-    An exception to be raised in the event that an extension malfuncions( returning invalid data, etc ).
+    An exception to be raised in the event that an extension malfuncions
+    (returning invalid data, etc).
     """
-    def __init__( self, message = None ):
-        Exception.__init__( self, message )
+    def __init__(self, message = None):
+        Exception.__init__(self, message)

@@ -1,5 +1,5 @@
 """
-modeGrey.py
+edge_detect.py
 Copyright 2007 Thomas McGrew
 
 This file is part of The Python Image Manipulation Project.
@@ -20,15 +20,20 @@ along with The Python Image Manipulation Project.  If not, see
 
 """
 
-from extensions.lib.color import to_grey
+from extensions.lib.core import spatial
 
-MENU = "&Image.&Color"
-LABEL = "&Greyscale"
-DESCRIPTION = "Convert this image to greyscale"
+MENU = "Fil&ter"
+LABEL = "Sharpen"
+DESCRIPTION = "Laplacian Sharpen"
+
+FILTER = (1,  1,  1,
+          1, -9,  1,
+          1,  1,  1 )
+
 
 def execute(width, height, data):
     """
-    Converts an image to greyscale.
+    Sharpens the image with a laplacian algorithm.
 
     :Parameters:
         width : int
@@ -41,4 +46,4 @@ def execute(width, height, data):
     :rtype: tuple
     :returns: a tuple containing a width, height, and data as a binary string.
     """
-    return to_grey(width, height, data)
+    return spatial(width, height, data, FILTER)

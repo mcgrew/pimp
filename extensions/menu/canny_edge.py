@@ -1,5 +1,5 @@
 """
-modeRGB.py
+edge_detect.py
 Copyright 2007 Thomas McGrew
 
 This file is part of The Python Image Manipulation Project.
@@ -20,16 +20,38 @@ along with The Python Image Manipulation Project.  If not, see
 
 """
 
-from core import toRGB
+from extensions.lib.core import spatial, string_copy
 
-MENU = "&Image.&Mode"
-LABEL = "&RGB"
-DESCRIPTION = "Convert this image to RGB"
+MENU = "Fil&ter.&Edge Detect"
+LABEL = "Canny"
+DESCRIPTION = "Canny Edge Detect"
+
+GAUSSIAN = ( 2,  4,  5,  4,  2,
+             4,  9, 12,  9,  4,
+             5, 12, 15, 12,  5,
+             4,  9, 12,  9,  4,
+             2,  4,  5,  4,  2)
+
+FILTER1 = ( 0,  0,  0,
+           -1,  0,  1,
+            0,  0,  0 )
+
+FILTER2 = ( 0,  1,  0,
+            0,  0,  0,
+            0, -1,  0 )
+
+FILTER3 = (-1,  0,  0,
+            0,  0,  0,
+            0,  0,  1 )
+
+FILTER4 = ( 0,  0,  1,
+            0,  0,  0,
+           -1,  0,  0 )
 
 def execute( width, height, data ):
     """
-    Converts an image to RGB.
-        
+    Performs a Laplacian Edge Detect.
+
     :Parameters:
         width : int
             The width of the image being converted
@@ -37,8 +59,15 @@ def execute( width, height, data ):
             The height of the image being converted
         data : string
             A string containing the data for the image
-    
+
     :rtype: tuple
     :returns: a tuple containing a width, height, and data as a binary string.
     """
-    return toRGB( width, height, data )
+    spatial( width, height, data, GAUSSIAN )
+    edge1 = spatial( width, height, string_copy(data), FILTER1 )[2]
+    edge2 = spatial( width, height, string_copy(data), FILTER2 )[2]
+    edge3 = spatial( width, height, string_copy(data), FILTER3 )[2]
+    edge4 = spatial( width, height, string_copy(data), FILTER4 )[2]
+    data = bytes([min(255, sum(x)) for x in zip(edge1, edge2, edge3, edge4)])
+    data = bytes([min(255,x * 4) if x > 64 else 0 for x in data])
+    return width, height, data

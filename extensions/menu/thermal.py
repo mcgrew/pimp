@@ -31,11 +31,11 @@ COLORS = b'\x00\x00\x00' * 2 + b'\x80\x00\xff' * 2 + \
          b'\x00\xff\x00' * 2 + b'\xff\xff\x00' * 2 + \
          b'\xff\x80\x00' * 2 + b'\xff\x00\x00' * 2
 
-def execute( width, height, data ):
+def execute( width, height, data):
     """
     Converts an image to a "thermal" image. It resembles an image
     taken by a thermal camera.
-    
+
     :Parameters:
         width : int
             The width of the image being converted
@@ -43,9 +43,8 @@ def execute( width, height, data ):
             The height of the image being converted
         data : string
             A string containing the data for the image
-    
+
     :rtype: tuple
     :returns: a tuple containing a width, height, and data as a binary string.
     """
-    return pseudocolor( width, height, data, COLORS )
-    
+    return pseudocolor(width, height, data, COLORS)

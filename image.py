@@ -1,6 +1,6 @@
 """
 image.py
-Copyright 2007 Thomas McGrew
+Copyright 2007,2020 Thomas McGrew
 
 This file is part of The Python Image Manipulation Project.
 
@@ -19,15 +19,16 @@ along with The Python Image Manipulation Project.  If not, see
 <http://www.gnu.org/licenses/>.
 """
 
-VERSION = "0.1"
 
-from extensions.lib.core import stringCopy
+from extensions.lib.core import string_copy
+
+VERSION = "0.1"
 
 class Image:
     """
     A class for storing image data.
     """
-    def __init__( self, width, height, data='' ):
+    def __init__(self, width, height, data=''):
         """
         Creates an Image object.
 
@@ -37,50 +38,54 @@ class Image:
             height : int
                 The height of the image in pixels
             data : string
-                The optional data for this image formatted as a string containing binary data
+                The optional data for this image formatted as a string
+                containing binary data
         """
         self._width = width
         self._height = height
         self._data = data
-        if len( data ):
-            self._channels = len( data ) // ( width * height )
-            if not ( self._channels in ( 3, 4 ) ):
-                raise ValueError( "Data contained an invalid number of channels, 3 or 4 expected, %d recieved ( width: %d, height: %d, bytes: %d )"
-                                    % self._channels, width, height, len( data ) )
+        if data:
+            self._channels = len(data) // (width * height)
+            if self._channels not in (3, 4):
+                raise ValueError("Data contained an invalid number of "
+                    f"channels, 3 or 4 expected, {self._channels} recieved "
+                    f"(width: {width}, height: {height}, bytes: {len(data)})")
         else:
             self._channels = 3
-            data = '\x00' * ( width * height * 3 ) # create a pure black image.
+            data = '\x00' * (width * height * 3) # create a pure black image.
 
-    def copy( self ):
+    def copy(self):
         """
         Returns a copy of this image.
 
         :rtype: Image
         :returns: a copy of this image.
         """
-        return Image( self.getWidth( ), self.getHeight( ), stringCopy( self.getData( ) ) )
-        
-    def hasAlpha( self ):
+        return Image(self.get_width(), self.get_height(),
+                string_copy(self.get_data()))
+
+    def has_alpha(self):
         """
         4 channel images have an alpha channel (RGBA).
 
         :rtype: bool
         :returns: True if the image has an alpha channel, false otherwise.
         """
-        return ( self._channels == 4 )
+        return self._channels == 4
 
-    def getAlpha( self ):
+    def get_alpha(self):
         """
         Get the alpha channel for this image.
 
         :rtype: str or bool
-        :returns: A string containing only the alpha channel data for this image, or False if it does not contain one.
+        :returns: A string containing only the alpha channel data for this
+            image, or False if it does not contain one.
         """
-        if not self.hasAlpha( ):
+        if not self.has_alpha():
             return False
-        return self._data[ ::4 ]
+        return self._data[::4]
 
-    def getData( self ):
+    def get_data(self):
         """
         Get the binary data for this image.
 
@@ -89,34 +94,34 @@ class Image:
         """
         return self._data
 
-    def getBlue( self ):
+    def get_blue(self):
         """
         Get the blue channel data
 
         :rtype: string
         :returns: The blue channel data for this image as a string
         """
-        return self._data[ 2::self._channels ]
+        return self._data[2::self._channels]
 
-    def getGreen( self ):
+    def get_green(self):
         """
         Get the green channel data.
 
         :rtype: string
         :returns: The green channel data for this image as a string
         """
-        return self._data[ 1::self._channels ]
+        return self._data[1::self._channels]
 
-    def getRed( self ):
+    def get_red(self):
         """
         Get the red channel data.
 
         :rtype: string
         :returns: The red channel data for this image as a string
         """
-        return self._data[  ::self._channels ]
+        return self._data[ ::self._channels]
 
-    def getHeight( self ):
+    def get_height(self):
         """
         Get the height of the image.
 
@@ -125,7 +130,7 @@ class Image:
         """
         return self._height
 
-    def getWidth( self ):
+    def get_width(self):
         """
         Get the width of the image.
 
@@ -134,25 +139,26 @@ class Image:
         """
         return self._width
 
-    def getSize( self ):
+    def get_size(self):
         """
         Get the image size.
 
         :rtype: tuple
         :returns: A tuple containing the width and height of the image in pixels.
         """
-        return ( self._width, self._height )
+        return (self._width, self._height)
 
-    def setData( self, data ):
+    def set_data(self, width, height, data):
         """
         Set the data for this image.
 
         :rtype: bool
         :returns: True if the operation succeeded.
         """
-        if not ( len( data ) // ( width * height ) in ( 3, 4 ) ):
-            raise ValueError( "The data buffer for this image is the incorrect length. Must be either width * height or width * height * 3" )
+        if not len(data) // (width * height) in (3, 4):
+            raise ValueError("The data buffer for this image is the incorrect "
+                "length. Must be either width * height or width * height * 3")
+        self._width = width
+        self._height = height
         self._data = data
         return True
-
-

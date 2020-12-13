@@ -1,5 +1,5 @@
 """
-modeGrey.py
+swapRedBlue.py
 Copyright 2007 Thomas McGrew
 
 This file is part of The Python Image Manipulation Project.
@@ -20,15 +20,15 @@ along with The Python Image Manipulation Project.  If not, see
 
 """
 
-from extensions.lib.color import to_grey
+from extensions.lib.core import swap_channels
 
-MENU = "&Image.&Color"
-LABEL = "&Greyscale"
-DESCRIPTION = "Convert this image to greyscale"
+MENU = "&Image.S&wap Channels"
+LABEL = "Red <-> Blue"
+DESCRIPTION = "Swap the red and blue channels in this image"
 
 def execute(width, height, data):
     """
-    Converts an image to greyscale.
+    Swaps the red and blue channels in an image.
 
     :Parameters:
         width : int
@@ -41,4 +41,7 @@ def execute(width, height, data):
     :rtype: tuple
     :returns: a tuple containing a width, height, and data as a binary string.
     """
-    return to_grey(width, height, data)
+    channels = len(data) // (width * height)
+    if channels in (3, 4):
+        return swap_channels(width, height, data, 0, 2)
+    return width, height, data

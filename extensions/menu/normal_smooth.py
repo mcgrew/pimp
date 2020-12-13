@@ -22,19 +22,19 @@ along with The Python Image Manipulation Project.  If not, see
 
 from extensions.lib.core import spatial
 
-MENU = "Fil&ter.&Edge Detect"
-LABEL = "Sobel"
-DESCRIPTION = "Sobel Algorithm"
+MENU = "Fil&ter.&Smooth"
+LABEL = "Normal"
+DESCRIPTION = "Smooth Image"
 
-FILTER = ( -1,  0,  1,
-           -2,  0,  2,
-           -1,  0,  1 )
-           
+FILTER = (1,  1,  1,
+          1,  1,  1,
+          1,  1,  1)
 
-def execute( width, height, data ):
+
+def execute(width, height, data):
     """
-    Applies a Sobel edge detect algorithm on the image.
-        
+    Smooths an image evenly on a 3x3 area.
+
     :Parameters:
         width : int
             The width of the image being converted
@@ -42,9 +42,8 @@ def execute( width, height, data ):
             The height of the image being converted
         data : string
             A string containing the data for the image
-    
+
     :rtype: tuple
     :returns: a tuple containing a width, height, and data as a binary string.
     """
-    return spatial( width, height, data, FILTER )
-
+    return spatial(width, height, data, FILTER)

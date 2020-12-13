@@ -32,12 +32,12 @@ FILTER = ( 2,  4,  5,  4,  2,
            4,  9, 12,  9,  4,
            2,  4,  5,  4,  2)
 
-           
 
-def execute( width, height, data ):
+
+def execute(width, height, data):
     """
     Smooths an image evenly on a 3x3 area.
-        
+
     :Parameters:
         width : int
             The width of the image being converted
@@ -45,9 +45,8 @@ def execute( width, height, data ):
             The height of the image being converted
         data : string
             A string containing the data for the image
-    
+
     :rtype: tuple
     :returns: a tuple containing a width, height, and data as a binary string.
     """
-    return spatial( width, height, data, FILTER )
-
+    return spatial(width, height, data, FILTER)

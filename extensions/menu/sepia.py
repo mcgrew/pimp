@@ -20,18 +20,17 @@ along with The Python Image Manipulation Project.  If not, see
 
 """
 
-from extensions.lib.color import channelBrightness, toGrey
-from extensions.lib.core  import table
+from extensions.lib.color import channel_brightness, to_grey
 from extensions.menu.gamma import execute as gamma
 
 MENU = "&Image.&Color"
 LABEL = "&Sepia Tone"
 DESCRIPTION = "Convert this image to sepia tone"
 
-def execute( width, height, data ):
+def execute(width, height, data):
     """
     Converts the colors in an image to resemble a sepia tone photograph.
-    
+
     :Parameters:
         width : int
             The width of the image being converted
@@ -39,12 +38,11 @@ def execute( width, height, data ):
             The height of the image being converted
         data : string
             A string containing the data for the image
-    
+
     :rtype: tuple
     :returns: a tuple containing a width, height, and data as a binary string.
     """
-    pass1 = toGrey( width, height, data )[ 2 ]
-    pass2 = channelBrightness( width, height, pass1, ( 0, -18, -35 ) )[ 2 ]
+    pass1 = to_grey(width, height, data)[2]
+    pass2 = channel_brightness(width, height, pass1, (0, -18, -35))[2]
     # now adjust the gamma
-    return gamma( width, height, pass2, brightness=0, contrast=1.1, gamma=0.8 )
-    
+    return gamma(width, height, pass2, brightness=0, contrast=1.1, gamma=0.8)

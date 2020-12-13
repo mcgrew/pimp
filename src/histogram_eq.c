@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 const static char __doc__[] =
-"invert.c\n"
+"histogram_eq.c\n"
 "Copyright 2007,2020 Thomas McGrew\n"
 "\n"
 "This file is part of The Python Image Manipulation Project.\n"
@@ -24,10 +24,9 @@ const static char __doc__[] =
 "along with The Python Image Manipulation Project.  If not, see\n"
 "<http://www.gnu.org/licenses/>.\n";
 
-
 // doc string
 const static char execute__doc__[] =
-"Inverts the colors in an image.\n"
+"Performs a histogram equalization on an image.\n"
 "\n"
 ":Parameters:\n"
 "    filename : string\n"
@@ -40,15 +39,19 @@ const static char execute__doc__[] =
 "        The data as a binary string.\n"
 "\n"
 ":rtype: tuple\n"
-":returns: A tuple (width, height, data). Width and height are in pixels, "
-    "data is a string containing binary data for the image.\n";
+":returns: a tuple containing a width, height, and data as a binary string.\n";
 
-PyObject *invert_execute(PyObject *pself, PyObject *pArgs)
+PyObject *execute(PyObject *pself, PyObject *pArgs)
 {
     unsigned char *data;
-    unsigned int width, height, i;
+    unsigned int width, height;
     Py_ssize_t dataLen;
     unsigned char channels;
+
+    unsigned char *histogram_sum;
+    unsigned int i;
+    float pixelcount;
+    unsigned long long *histogram_table;
 
     // convert the passed in python argument to C types.
     if (!PyArg_ParseTuple(pArgs, "iiy#", &width, &height, &data, &dataLen))
@@ -58,47 +61,76 @@ PyObject *invert_execute(PyObject *pself, PyObject *pArgs)
     if ((channels < 3) || (channels > 4))
     {
          PyErr_Format(PyExc_ValueError, "Data contained an invalid number of "
-                 "channels, 3 or 4 expected, %d recieved (width: %d,"
+                 "channels, 3 or 4 expected, %d recieved (width: %d, "
                  "height: %d, bytes: %d)", channels, width, height, dataLen);
          return NULL;
     }
 
-    for (i=0; i < dataLen-channels; i+=channels)
+    // allocate memory
+    if (!(histogram_sum    = malloc(256 * sizeof(char))) ||
+         !(histogram_table  = calloc(256, sizeof(long long))))
     {
-        data[i  ] = data[i  ] ^ 0xff;
-        data[i+1] = data[i+1] ^ 0xff;
-        data[i+2] = data[i+2] ^ 0xff;
+         PyErr_SetString(PyExc_MemoryError, "Memory could not be allocated to "
+                 "create histogram tables");
+         return NULL;
+    }
+
+    // count the number of greyscale pixels of each value (0 - 255)
+    for (i=0; i <= (dataLen - channels); i+=channels)
+    {
+        histogram_table[(1 + data[i] + data[i+1] + data[i+2]) / 3 ]++;
+    }
+
+    // build a histogram table
+    pixelcount = width * height;
+    histogram_sum[0] = (histogram_table[0] * 255 / pixelcount);
+    for (i=1; i < 256; i++)
+    {
+        histogram_sum[i] =
+            histogram_table[i] * 255 / pixelcount + histogram_sum[i-1];
+    }
+
+    // convert the image using the histogram table
+    for (i=0; i < dataLen-channels+1; i+=channels)
+    {
+        data[i  ] = histogram_sum[data[i  ]];
+        data[i+1] = histogram_sum[data[i+1]];
+        data[i+2] = histogram_sum[data[i+2]];
     }
 
 
-    // Build a python tuple and return it.
+    // free all used memory
+    free(histogram_table);
+    free(histogram_sum);
+
+    // Build and return a python tuple.
     return Py_BuildValue("(iiy#)", width, height, data, dataLen);
+
 
 }
 
 // map of function names to functions
-static PyMethodDef invert_methods[] =
+static PyMethodDef methods[] =
 {
-    {"execute", invert_execute, METH_VARARGS, execute__doc__},
+    {"execute", execute, METH_VARARGS, execute__doc__},
     {NULL, NULL} // End of functions
 };
 
-static struct PyModuleDef invert_module = {
+static struct PyModuleDef histogram_eq_module = {
     PyModuleDef_HEAD_INIT,
     "ccore",
     __doc__,
     -1,
-    invert_methods
+    methods
 };
 
-PyMODINIT_FUNC PyInit_invert(void)
+PyMODINIT_FUNC PyInit_histogram_eq(void)
 {
-    PyObject *m = PyModule_Create(&invert_module);
+    PyObject *m = PyModule_Create(&histogram_eq_module);
     PyModule_AddStringConstant(m, "MENU", "Fil&ter");
-    PyModule_AddStringConstant(m, "LABEL", "In&vert");
+    PyModule_AddStringConstant(m, "LABEL", "&Equalize Histogram");
     PyModule_AddStringConstant(m, "DESCRIPTION",
-            "Inverts All Colors In The Image");
+            "Equalize the histogram of this image");
     return m;
 }
-
 

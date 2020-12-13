@@ -19,7 +19,6 @@ along with The Python Image Manipulation Project.  If not, see
 <http://www.gnu.org/licenses/>.
 
 """
-from time import sleep
 import wx
 
 from extensions.lib.core import table
@@ -28,15 +27,15 @@ MENU = "&Filter"
 LABEL = "Brightness levels"
 DESCRIPTION = "Adjust brightness, contrast, and gamma"
 
-           
 
-def execute( width, height, data, brightness=None, contrast=None, gamma=None ):
+
+def execute(width, height, data, brightness=None, contrast=None, gamma=None):
     """
     Performs a gamma adjustment on an image. Brightness, contrast, and gamma
     are optional arguments. Either all 3 must be supplied, or none. A dialog
     will appear to request all 3 values if any of them are missing, in which
     case the passed in values are ignored.
-        
+
     :Parameters:
         width : int
             The width of the image being converted
@@ -50,37 +49,38 @@ def execute( width, height, data, brightness=None, contrast=None, gamma=None ):
             The value of the change in contrast to apply.
         gamma : float
             The value of the change in gamma to apply.
-    
+
     :rtype: tuple
     :returns: a tuple containing a width, height, and data as a binary string.
     """
-    if ( None in ( gamma, brightness, contrast ) ):
-        dialog = gammaDialog( )
-        values = dialog.ShowModal( )
-        
+    if None in (gamma, brightness, contrast):
+        dialog = GammaDialog()
+        values = dialog.ShowModal()
+
         if not values:
             return False
-        
+
         gamma, brightness, contrast = values
-    
+
     # build a substitution table
-    substTable = list(range(256))
-    
-    for i in range( 256 ):
-        substTable[ i ] = max( min( ( substTable[ i ] + brightness ), 255 ), 0 )
-        substTable[ i ] = min( int( substTable[ i ] * contrast ), 255 )
-        substTable[ i ] = min( int( substTable[ i ] ** gamma / 256 ** ( gamma-1 ) ), 255 )
-        
-    return table( width, height, data, substTable )
+    subst_table = list(range(256))
+
+    for i in range(256):
+        subst_table[i] = max(min((subst_table[i] + brightness), 255), 0)
+        subst_table[i] = min(int(subst_table[i] * contrast), 255)
+        subst_table[i] = min(int(subst_table[i] ** gamma / 256 ** (gamma-1)), 255)
+
+    return table(width, height, data, subst_table)
 
 
 
 
-class gammaDialog( wx.Dialog ):
+class GammaDialog(wx.Dialog):
     """
     A class for getting input values from the user for the nintendize filter
     """
-    def __init__( self, parent=None, id=-1, okFunction=None, sliderUpdateFunction=None, title="Brightness Adjust" ):
+    def __init__(self, parent=None, id=-1, ok_function=None,
+            slider_update_func=None, title="Brightness Adjust"):
         """
         Initializes the dialog box.
 
@@ -89,60 +89,73 @@ class gammaDialog( wx.Dialog ):
                 The parent of this dialog. Defaults to None.
             id : int
                 The id of this dialog. Defaults to -1
-            okFunction : function
-                An optional additional function to be called when the OK button is pressed. Defaults to None
-            sliderUpdateFunction : function
-                An an optional additional function to be called when one of the sliders is changed. Defaults to None.
+            ok_function : function
+                An optional additional function to be called when the OK button
+                is pressed. Defaults to None
+            slider_update_func : function
+                An an optional additional function to be called when one of the
+                sliders is changed. Defaults to None.
             title : String
-                The title of the dialog box to be displayed in the titlebar. Defaults to "Brightness Adjust".
+                The title of the dialog box to be displayed in the titlebar.
+                Defaults to "Brightness Adjust".
         """
-        wx.Dialog.__init__( self, None, -1, title, wx.DefaultPosition, ( 320, 180 ) )
+        wx.Dialog.__init__(self, parent, id, title, wx.DefaultPosition,
+                (320, 180))
 
-        self.brightnessSlider = wx.Slider( self, -1, value = 0, minValue = -255, maxValue = 255, pos = ( 80, 10 ), size = ( 200, 30 ) )
-        self.contrastSlider   = wx.Slider( self, -1, value = 1, minValue =  -90, maxValue =  91, pos = ( 80, 40 ), size = ( 200, 30 ) )
-        self.gammaSlider      = wx.Slider( self, -1, value = 1, minValue =  -90, maxValue =  91, pos = ( 80, 70 ), size = ( 200, 30 ) )
+        self._brightness_slider = wx.Slider(self, -1, value=0, minValue=-255,
+                maxValue=255, pos=(80, 10), size=(200, 30))
+        self._contrast_slider   = wx.Slider(self, -1, value=1, minValue= -90,
+                maxValue= 91, pos=(80, 40), size=(200, 30))
+        self._gamma_slider      = wx.Slider(self, -1, value=1, minValue= -90,
+                maxValue= 91, pos=(80, 70), size=(200, 30))
 
-        self.displayPanel = wx.Panel( self, -1, pos = ( 280, 10 ), size = ( 50, 100 ) )
-        self.brightnessDisplay = wx.StaticText( self.displayPanel, pos = ( 0,  5 ) )
-        self.contrastDisplay   = wx.StaticText( self.displayPanel, pos = ( 0, 35 ) )
-        self.gammaDisplay      = wx.StaticText( self.displayPanel, pos = ( 0, 65 ) )
+        self._display_panel = wx.Panel(self, -1, pos=(280, 10), size=(50, 100))
+        self._brighntess_display = \
+                wx.StaticText(self._display_panel, pos=(0,  5))
+        self._contrast_display = wx.StaticText(self._display_panel, pos=(0, 35))
+        self._gamma_display    = wx.StaticText(self._display_panel, pos=(0, 65))
 
-        self.labelPanel = wx.Panel( self, -1, pos = ( 10, 10 ), size = ( 70, 90 ) )
-        self.brightnessLabel = wx.StaticText( self.labelPanel, pos = ( 0,  5 ), label="Brightness" )
-        self.contrastLabel   = wx.StaticText( self.labelPanel, pos = ( 0, 35 ), label="Contrast"   )
-        self.gammaLabel      = wx.StaticText( self.labelPanel, pos = ( 0, 65 ), label="Gamma"      )
+        self._label_panel = wx.Panel(self, -1, pos = (10, 10), size = (70, 90))
+        self.brightness_label = wx.StaticText(self._label_panel, pos = (0,  5),
+                label="Brightness")
+        self.brightness_label = wx.StaticText(self._label_panel, pos = (0, 35),
+                label="Contrast"  )
+        self._gamma_label      = wx.StaticText(self._label_panel, pos = (0, 65),
+                label="Gamma"     )
 
-        self.isOk = False
-        okButton     = wx.Button( self, id = wx.ID_OK,     pos = (  65, 100 ), size = ( 80, 30 ) )
-        cancelButton = wx.Button( self, id = wx.ID_CANCEL, pos = ( 165, 100 ), size = ( 80, 30 ) )
+        self._is_ok = False
+        ok_button     = wx.Button(self, id = wx.ID_OK,     pos=( 65, 100),
+                size=(80, 30))
+        cancel_button = wx.Button(self, id = wx.ID_CANCEL, pos=(165, 100),
+                size=(80, 30))
 
-        if okFunction:
-            self.okFunction = okFunction
-        elif ( "onOk" in dir( self ) ):
-            self.okFunction = self.onOk
+        if ok_function:
+            self._ok_function = ok_function
+        elif hasattr(self, "onOk"):
+            self._ok_function = self.onOk
         else:
-            self.okFunction = lambda x,y,z: None
-            
-        if sliderUpdateFunction:
-            self.sliderUpdateFunction = sliderUpdateFunction
-        elif ( "onSliderupdate" in dir( self ) ):
-            self.sliderUpdateFunction = self.onSliderupdate
+            self._ok_function = lambda x,y,z: None
+
+        if slider_update_func:
+            self._slider_update_func = slider_update_func
+        elif hasattr(self, "onSliderupdate"):
+            self._slider_update_func = self.onSliderupdate
         else:
-            self.sliderUpdateFunction = lambda x,y,z: None
-            
-        self.gammaValue = 1
-        self.brightnessValue = 0
-        self.contrastValue = 1
-        self.updateDisplay( )
+            self._slider_update_func = lambda x,y,z: None
+
+        self._gamma_value = 1
+        self._brightness_value = 0
+        self._contrast_value = 1
+        self._update_display()
 
 
-        self.Bind( wx.EVT_SLIDER, self.sliderChange )
-        self.Bind( wx.EVT_CLOSE, self.cancel )
-        okButton.Bind( wx.EVT_BUTTON, self.ok )
-        cancelButton.Bind( wx.EVT_BUTTON, self.cancel )
-#        self.ShowModal( )
+        self.Bind(wx.EVT_SLIDER, self._slider_change)
+        self.Bind(wx.EVT_CLOSE, self.cancel)
+        ok_button.Bind(wx.EVT_BUTTON, self.ok)
+        cancel_button.Bind(wx.EVT_BUTTON, self.cancel)
+#        self.ShowModal()
 
-    def cancel( self, event=None ):
+    def cancel(self, event=None):
         """
         Internal function. Called when the "Cancel" button is pressed.
 
@@ -150,9 +163,9 @@ class gammaDialog( wx.Dialog ):
             event : wx.Event
                 Event generated by clicking a button. The argument is ignored.
         """
-        self.Destroy( )
+        self.Destroy()
 
-    def ok( self, event=None ):
+    def ok(self, event=None):
         """
         Internal function. Called when the "OK" button is pressed
 
@@ -160,50 +173,57 @@ class gammaDialog( wx.Dialog ):
             event : wx.Event
                 Event generated by clicking a button. The argument is ignored.
         """
-        self.okFunction( self.gammaValue, self.brightnessValue, self.contrastValue )
-        self.isOk = True
-        self.Destroy( )
+        self._ok_function(self._gamma_value, self._brightness_value,
+                self._contrast_value)
+        self._is_ok = True
+        self.Destroy()
 
-    def sliderChange( self, event=None ):
+    def _slider_change(self, event=None):
         """
-        Internal Function. Called when one of the sliders is changed within the dialog box.
+        Internal Function. Called when one of the sliders is changed within the
+        dialog box.
 
         :Parameters:
             event : wx.Event
                 Event generated by clicking a button. The argument is ignored.
         """
-        if ( self.gammaSlider.GetValue( ) >= 1 ):
-            self.gammaValue = float( self.gammaSlider.GetValue( ) + 9 ) / 10
+        if self._gamma_slider.GetValue() >= 1:
+            self._gamma_value = (self._gamma_slider.GetValue() + 9) / 10
         else:
-            self.gammaValue = round( float( self.gammaSlider.GetValue( ) + 90 ) / 90, 2 )
+            self._gamma_value = \
+                    round((self._gamma_slider.GetValue() + 90) / 90, 2)
 
-        self.brightnessValue = self.brightnessSlider.GetValue( )
+        self._brightness_value = self._brightness_slider.GetValue()
 
-        if ( self.contrastSlider.GetValue( ) >= 1 ):
-            self.contrastValue = float( self.contrastSlider.GetValue( ) + 9 ) / 10
+        if self._contrast_slider.GetValue() >= 1:
+            self._contrast_value = (self._contrast_slider.GetValue() + 9) / 10
         else:
-            self.contrastValue = round( float( self.contrastSlider.GetValue( ) + 90 ) / 90, 2 )
-        self.updateDisplay( )
-        self.sliderUpdateFunction( self.gammaValue, self.brightnessValue, self.contrastValue )
+            self._contrast_value = \
+                    round((self._contrast_slider.GetValue() + 90) / 90, 2)
+        self._update_display()
+        self._slider_update_func(self._gamma_value, self._brightness_value,
+                self._contrast_value)
 
-    def updateDisplay( self ):
+    def _update_display(self):
         """
-        Internal Function. Called when one of the sliders is changed to update the values displayed.
+        Internal Function. Called when one of the sliders is changed to update
+        the values displayed.
         """
-        self.gammaDisplay.SetLabel(      "%3.2f" % self.gammaValue      )
-        self.brightnessDisplay.SetLabel( "%3d"   % self.brightnessValue )
-        self.contrastDisplay.SetLabel(   "%3.2f" % self.contrastValue   )
+        self._gamma_display.SetLabel(     "%3.2f" % self._gamma_value     )
+        self._brighntess_display.SetLabel("%3d"   % self._brightness_value)
+        self._contrast_display.SetLabel(  "%3.2f" % self._contrast_value  )
 
-    def ShowModal( self ):
+    def ShowModal(self):
         """
-        Displays the dialog window and waits for the user to click OK or Cancel to return a value.
+        Displays the dialog window and waits for the user to click OK or Cancel
+        to return a value.
 
         :rtype: tuple or boolean
-        :returns: The values for gamma, brightness, and contrast values in a tuple if OK is clicked. Returns False otherwise.
+        :returns: The values for gamma, brightness, and contrast values in a
+        tuple if OK is clicked. Returns False otherwise.
         """
-        wx.Dialog.ShowModal( self )
-        if self.isOk:
-            return ( self.gammaValue, self.brightnessValue, self.contrastValue )
+        wx.Dialog.ShowModal(self)
+        if self._is_ok:
+            return (self._gamma_value, self._brightness_value,
+                    self._contrast_value)
         return False
-
-

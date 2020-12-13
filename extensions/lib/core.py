@@ -20,12 +20,11 @@ along with The Python Image Manipulation Project.  If not, see
 """
 
 # import the core methods from the shared object file
-from extensions.lib.cCore import *
+from wx import Image
+from extensions.lib.ccore import *
 
-from wx import Image, Bitmap, EmptyImage
 
-
-def dataToBitmap( width, height, data ):
+def data_to_bitmap( width, height, data ):
     """
     Converts data to a wx.Bitmap.
 
@@ -36,13 +35,11 @@ def dataToBitmap( width, height, data ):
             The height of the image (in pixels).
         data : string
             The image as a string of bytes.
-    
+
     :rtype: wx.Bitmap
     :returns: a wx.Bitmap containing the image data.
     """
-    
-    image = Image( width, height )
-    image.SetData( toRGB( width, height, bytes(data) )[ 2 ] )
-    return image.ConvertToBitmap( )
-    
 
+    image = Image( width, height )
+    image.SetData( to_rgb( width, height, bytes(data) )[ 2 ] )
+    return image.ConvertToBitmap( )

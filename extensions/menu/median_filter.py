@@ -1,6 +1,6 @@
 """
 nintendize.py
-Copyright 2007,2020 Thomas McGrew
+Copyright 2007 Thomas McGrew
 
 This file is part of The Python Image Manipulation Project.
 
@@ -21,19 +21,17 @@ along with The Python Image Manipulation Project.  If not, see
 
 import wx
 
-from extensions.lib import nintendize
+from extensions.lib import median_filter
 
-MENU = "Fil&ter.&Comic"
-LABEL = "Nintendi&ze"
-DESCRIPTION = "Nintendize it!"
+MENU = "Fil&ter"
+LABEL = "&Median Filter"
+DESCRIPTION = "Smooths an image by making each pixel appear more like it's " \
+        "neighboring pixels"
 
-def execute(width, height, data, resolution=None, color_level=None):
+def execute(width, height, data, filter_size=None):
     """
-    Pixellates the image and reduces bit quality in a way such that it
-    looks like an image from an old video game console. Resolution and
-    colorLevel are optional, either both or none should be provided. A
-    dialog will appear requesting both values if one is not supplied,
-    in which case the passed in values are ignored.
+    Smooths an image by making each pixel appear more like it's neighboring
+    pixels.
 
     :Parameters:
         filename : string
@@ -43,36 +41,32 @@ def execute(width, height, data, resolution=None, color_level=None):
         height : int
             The height of the image in pixels
         data : string
-            The data as a string - chr(red) + chr(green) + chr(blue) for each
-            pixel.
-        resolution : int
-            The resolution value to apply to the image.
-        colorLevel : int
-            The colorLevel value to apply to the image
+            The data as a binary string.
+        filter_size : int
+            The size of the filter to be applied to the image. A dialog box will
+            request this value if it is not supplied.
 
     :rtype: tuple
-    :returns: A tuple (width, height, data). Width and height are in pixels,
-        data is a binary string.
+    :returns: a tuple containing a width, height, and data as a binary string.
     """
-    if None in (resolution, color_level):
-        dialog = NintendizeDialog(max_resolution = min(width, height))
+    if filter_size is None:
+        dialog = MedianFilterDialog()
         values = dialog.ShowModal()
 
         if not values:
             return False
 
-        resolution, colorlevel = values
+        filter_size = values
 
-    return nintendize.execute(width, height, data, resolution, colorlevel)
+    return median_filter.execute(width, height, data, filter_size)
 
 
-class NintendizeDialog(wx.Dialog):
+class MedianFilterDialog(wx.Dialog):
     """
     A class for getting input values from the user for the nintendize filter
     """
     def __init__(self, parent=None, id=-1, ok_func=None,
-            slider_update_func=None, title="Nintendize Options",
-            max_resolution=500):
+            slider_update_func=None, title="Median Filter Options"):
         """
         Initializes the dialog box.
 
@@ -89,58 +83,49 @@ class NintendizeDialog(wx.Dialog):
                 sliders is changed. Defaults to None.
             title : String
                 The title of the dialog box to be displayed in the titlebar.
-                Defaults to "Nintendize Options".
-            max_resolution : int
-                The maximim value to be available on the resolution slider.
-                Defaults to 500.
+                Defaults to "Median Filter Options".
         """
-        wx.Dialog.__init__(self, parent, id, title,
-                wx.DefaultPosition,(330, 140))
+        wx.Dialog.__init__(self, parent, id, title, wx.DefaultPosition,
+                (320, 130))
 
-        self._resolution_value = 200
-        self._color_level_value = 2
+        self._filter_size_val = 3
 
-        self._resolution_slider = wx.Slider(self, -1,
-                value=self._resolution_value, minValue=1,
-                maxValue=max_resolution, pos=(80, 10), size=(200, 30))
-        self._color_level_slider = wx.Slider(self, -1,
-                value=self._color_level_value, minValue= 1, maxValue=8,
-                pos=(80, 40), size=(200, 30))
+        self.filterSizeSlider   = wx.Slider(self, -1,
+                value=self._filter_size_val, minValue=3, maxValue=15,
+                pos=(80, 10), size=(200, 30))
 
-        self._display_panel = wx.Panel(self, -1, pos=(280, 10), size=(60, 100))
-        self._resolution_display = wx.StaticText(self._display_panel, pos=(0,  5))
-        self._color_level_display = wx.StaticText(self._display_panel, pos=(0, 35))
+        self._display_panel = wx.Panel(self, -1, pos=(280, 10), size=(50, 30))
+        self._filter_size_display = \
+                wx.StaticText(self._display_panel, pos=(0, 5))
 
-        self._label_panel = wx.Panel(self, -1, pos=(10, 10), size=(70, 60))
-        self._resolution_label = wx.StaticText(self._label_panel, pos=(0,  5),
-                label="Resolution")
-        self._color_level_label = wx.StaticText(self._label_panel, pos=(0, 35),
-                label="Color Level")
+        self._label_panel = wx.Panel(self, -1, pos = (10, 10), size = (70, 30))
+        self._filter_size_label = wx.StaticText(self._label_panel, pos=(0, 5),
+                label="Filter Size"  )
 
         self._is_ok = False
-        ok_button     = wx.Button(self, id=wx.ID_OK,     pos=( 65, 70),
-                size=(80, 30))
-        cancel_button = wx.Button(self, id=wx.ID_CANCEL, pos=(165, 70),
-                size=(80, 30))
+        ok_button     = wx.Button(self, id = wx.ID_OK,
+                pos=(65, 50), size=(80, 30))
+        cancel_button = wx.Button(self, id = wx.ID_CANCEL,
+                pos=(165, 50), size=(80, 30))
 
         if ok_func:
             self._ok_func = ok_func
         elif hasattr(self, "onOk"):
             self._ok_func = self.onOk
         else:
-            self._ok_func = lambda x,y: None
+            self._ok_func = lambda x: None # a dummy function
 
         if slider_update_func:
             self._slider_update_func = slider_update_func
         elif hasattr(self, "onSliderupdate"):
             self._slider_update_func = self.onSliderupdate
         else:
-            self._slider_update_func = lambda x,y: None
+            self._slider_update_func = lambda x: None # a dummy function
 
         self._update_display()
 
 
-        self.Bind(wx.EVT_SLIDER, self.sliderChange)
+        self.Bind(wx.EVT_SLIDER, self._slider_change)
         self.Bind(wx.EVT_CLOSE, self.cancel)
         ok_button.Bind(wx.EVT_BUTTON, self.ok)
         cancel_button.Bind(wx.EVT_BUTTON, self.cancel)
@@ -163,11 +148,11 @@ class NintendizeDialog(wx.Dialog):
             event : wx.Event
                 Event generated by clicking a button. The argument is ignored.
         """
-        self._ok_func(self._resolution_value, self._color_level_value)
+        self._ok_func(self._filter_size_val)
         self._is_ok = True
         self.Destroy()
 
-    def sliderChange(self, event=None):
+    def _slider_change(self, event=None):
         """
         Internal Function. Called when one of the sliders is changed within the
         dialog box.
@@ -176,20 +161,17 @@ class NintendizeDialog(wx.Dialog):
             event : wx.Event
                 Event generated by clicking a button. The argument is ignored.
         """
-        self._resolution_value = self._resolution_slider.GetValue()
-        self._color_level_value = self._color_level_slider.GetValue()
+        self._filter_size_val = self.filterSizeSlider.GetValue()
 
         self._update_display()
-        self._slider_update_func(self._resolution_value,
-                self._color_level_value)
+        self._slider_update_func(self._filter_size_val)
 
     def _update_display(self):
         """
         Internal Function. Called when one of the sliders is changed to update
         the values displayed.
         """
-        self._resolution_display.SetLabel("%5d" % self._resolution_value)
-        self._color_level_display.SetLabel("%3d" % self._color_level_value)
+        self._filter_size_display.SetLabel("%2d" % self._filter_size_val)
 
     def ShowModal(self):
         """
@@ -198,11 +180,10 @@ class NintendizeDialog(wx.Dialog):
 
         :rtype: tuple or boolean
         :returns: The values for resolution and color level in a tuple if OK is
-            clicked. Returns False otherwise.
+        clicked. Returns False otherwise.
         """
         wx.Dialog.ShowModal(self)
         if self._is_ok:
-            return (self._resolution_value, self._color_level_value)
+            return self._filter_size_val
         return False
-
 
