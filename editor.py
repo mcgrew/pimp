@@ -23,6 +23,7 @@ along with The Python Image Manipulation Project.  If not, see
 import os
 from glob import glob
 from sys import argv, platform
+from importlib import reload
 import wx
 
 from image import Image
@@ -101,6 +102,7 @@ class Frame(wx.Frame):
         """
         wx.Frame.__init__(self, None, -1, TITLE, wx.DefaultPosition,
                 wx.DefaultSize)
+        self._extra_menus = {}
         self._image = None
         self.set_image_file(None)
         self._scroller = wx.ScrolledWindow(self)
@@ -232,9 +234,9 @@ class Frame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.save_as,
                 file_menu.Append(-1, "&Save As",
                     "Save the file under a different name"))
-        self.Bind(wx.EVT_MENU, self._reload_menu_extensions,
-                file_menu.Append(-1, "Reload Extensions",
-                    "Reload all PIMP extensions"))
+#          self.Bind(wx.EVT_MENU, self._reload_menu_extensions,
+#                  file_menu.Append(-1, "Reload Extensions",
+#                      "Reload all PIMP extensions"))
         self.Bind(wx.EVT_MENU, self.onExit,
                 file_menu.Append(-1, "E&xit", "Close the program"))
         self.Bind(wx.EVT_MENU, self.undo, edit_menu.Append(-1,
@@ -321,8 +323,6 @@ class Frame(wx.Frame):
         debug("RELOADING EXTENSIONS")
         #reload the fileformat extensions
         reload_extensions()
-        #reload the default menu items
-        self._build_menu()
         # reload the menu extensions
         self._load_menu_extensions()
 
@@ -353,49 +353,19 @@ class Frame(wx.Frame):
 
                 # split up the menu path to see if it contains submenus
                 menu_path = module.MENU.split('.')
+                if menu_path[0].replace('&', '') not in self._extra_menus:
+                    self._extra_menus[menu_path[0].replace('&', '')] = \
+                            Menu(self, self.menu_bar, menu_path[0])
+                menu = self._extra_menus[menu_path[0].replace('&', '')]
+                if not menu.add_item(menu_path[1:], module):
+                    reload(module)
 
-                menu_pos = self.menu_bar.FindMenu(menu_path[0])
-                if menu_pos == -1:
-                    self.menu_bar.Append(wx.Menu(), menu_path[0])
-                    menu_pos = self.menu_bar.FindMenu(menu_path[0])
 
-                menu = self.menu_bar.GetMenu(menu_pos)
-                menu_list = self._find_menu(menu, menu_path[1:])
-                self._add_menu_item(module, menu_list[-1] if menu_list else menu)
                 debug(f"Loaded module {module_file}")
 
             else:
                 # the module does not have the correct 'constants' defined.
                 debug(f"{module_file} is not a valid module.")
-        debug()
-
-    def _find_menu(self, menu, menu_path):
-        """
-        Finds a menu for adding an item to.
-        """
-        if not menu_path:
-            return []
-        items = menu.GetMenuItems()
-        for m in items:
-            if hasattr(m, 'GetName'):
-                if m.GetName().replace('&', '') == menu_path[0].replace('&',''):
-                    return m, *self._find_menu(m, menu_path[1:])
-        m = menu.Append(-1, menu_path[0], wx.Menu())
-        return m, *self._find_menu(m, menu_path[1:])
-
-    def _add_menu_item(self, module, menu):
-        """
-        Adds a new menu item
-        """
-        if not hasattr(menu, 'Append'):
-            menu = menu.GetSubMenu()
-        if hasattr(module, "DESCRIPTION"):
-            description = module.DESCRIPTION
-        else:
-            description = str()
-        # create and bind a handler to a menuItem.
-        self.Bind(wx.EVT_MENU, self._filter_handler(module.execute),
-                menu.Append(-1, module.LABEL, description))
 
     def _filter_handler(self, handler):
         """
@@ -429,6 +399,37 @@ class Frame(wx.Frame):
         self.Close(True)
 
 # ============================ END FRAME CLASS =================================
+
+class Menu:
+    def __init__(self, editor:Frame, parent:wx.Menu, name:str):
+        self.name = name.replace('&', '')
+        self._menu = wx.Menu()
+        self._items = {}
+        self._modules = {}
+        self._editor = editor
+        if hasattr(parent, 'AppendSubMenu'): # This is a submenu
+            parent.AppendSubMenu(self._menu, name)
+        else: # This is the menu bar
+            parent.Append(self._menu, name)
+
+    def add_item(self, path:list[str], module):
+        if path:
+            p = path[0].replace('&', '')
+            if p not in self._items:
+                self._items[p] = Menu(self._editor, self._menu, path[0])
+                self._modules[p] = module
+            menu  = self._items[p]
+            menu.add_item(path[1:], module)
+        else:
+            label = module.LABEL.replace('&', '')
+            if label in self._items:
+                return False
+            self._items[label] = \
+                    wx.MenuItem(self._menu, -1, module.LABEL, module.DESCRIPTION)
+            self._editor.Bind(
+                    wx.EVT_MENU, self._editor._filter_handler(module.execute),
+                    self._menu.Append(-1, module.LABEL, module.DESCRIPTION))
+            return True
 
 def write(filename, image):
     """
